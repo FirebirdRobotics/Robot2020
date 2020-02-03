@@ -19,7 +19,7 @@ public class ShooterCommand extends CommandBase {
   private ShooterSystem mShooter;
   private VisionSystem mVision;
   private double distanceToTarget;
-  private final double EPSILON = 0.01;
+  private final double EPSILON = 0.01; // all error unaccounted for
 
   /**
    * Creates a new ShooterCommand.

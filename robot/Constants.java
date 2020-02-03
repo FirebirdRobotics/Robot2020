@@ -181,9 +181,14 @@ public final class Constants {
 
     // Vision
     public static final class VisionConstants {
-        // Proportional control loop constants (maybe try PID after mastering proportional)
-        public static final double kpRotation = 0.20; // turn
-        public static final double kpDistance = 0.70; // drive
+        // PID Constants (turn)
+        public static final double kpRotation = 0.20; // proportional
+
+        // PID Constants (drive)
+        public static final double kpDistance = 0.70; // proportional
+        public static final double kiDistance = 0.00; // integral
+        public static final double kdDistance = 0.00; // derivative
+        public static final double kTimePerLoop = 0.02; // robot updates every 0.02 seconds
 
         // Minimum power given to DT needed to overcome friction; helps robot move & rotate at low speeds
         public static double kConstantForce = 0.05;
