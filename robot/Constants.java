@@ -13,10 +13,6 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.util.Color;
 
-/*
- * IMPORTANT: Units currently in inches and radians. Modify subsystems and methods as appropriate.
-*/
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -33,7 +29,7 @@ public final class Constants {
     public static final boolean distanceConversionRequired = false;
 
     public static final class PhysicsConstants {
-        public static final double gAcceleration = 386.09;
+        public static final double gAcceleration = 386.09; // in inches per second squared
     }
 
     // OI
@@ -63,6 +59,13 @@ public final class Constants {
 
         // VISIONSYSTEM
         public static final Button b_visionRoutineTape = Button.kA;
+    }
+
+    public static final class AutonomousConstants {
+        // Drivetrain in auto
+        public static final double kDriveSpeed = 0;
+        public static final double kMaxSpeed = 0;
+        public static final double kWheelRadius = 0;
     }
 
     // Drivetrain

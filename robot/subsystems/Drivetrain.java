@@ -7,11 +7,14 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -48,8 +51,15 @@ public class Drivetrain extends SubsystemBase {
 
     m_leftMaster.setInverted(false); // CHANGE THESE UNTIL ROBOT DRIVES FORWARD
     m_rightMaster.setInverted(true); // CHANGE THESE UNTIL ROBOT DRIVES FORWARD
+
     m_leftSlave.setInverted(InvertType.FollowMaster);
     m_rightSlave.setInverted(InvertType.FollowMaster);
+
+    // flip so that motor output and sensor velocity are same polarity
+    m_leftMaster.setSensorPhase(false);
+    m_rightMaster.setSensorPhase(true);
+    m_leftSlave.setSensorPhase(false);
+    m_rightSlave.setSensorPhase(true);
 
     // diffdrive assumes by default that right side must be negative- change to false for master/slave config
     m_diffDrive.setRightSideInverted(false); // DO NOT CHANGE THIS
@@ -64,14 +74,33 @@ public class Drivetrain extends SubsystemBase {
 
     // use the defined SupplyCurrentLimitConfiguration object to limit the current of the motors
     m_talon.configSupplyCurrentLimit(m_currentLimitConfig, DriveConstants.kTimeoutMs);
+
+    // setup encoders; talonFX integrated sensor, closed loop
+    m_talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, DriveConstants.kTimeoutMs);
   }
 
   public void arcadeDrive(double forward, double turn) {
     m_diffDrive.arcadeDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
+    
+    updateDashboard(m_leftMaster, "Left Master");
+    updateDashboard(m_rightMaster, "Right Master");
+    updateDashboard(m_leftSlave, "Left Slave");
+    updateDashboard(m_rightSlave, "Right Slave");
   }
 
   public void curvatureDrive(double forward, double turn, boolean isQuickTurn) {
     m_diffDrive.curvatureDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
+
+    updateDashboard(m_leftMaster, "Left Master");
+    updateDashboard(m_rightMaster, "Right Master");
+    updateDashboard(m_leftSlave, "Left Slave");
+    updateDashboard(m_rightSlave, "Right Slave");
+  }
+
+  public void updateDashboard(WPI_TalonFX talon, String talonName) {
+    SmartDashboard.putNumber("Sensor Vel. (" + talonName + ")", talon.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Sensor Pos. (" + talonName + ")", talon.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Output % (" + talonName + ")", talon.getMotorOutputPercent());
   }
 
   @Override
