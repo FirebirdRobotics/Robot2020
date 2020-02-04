@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.util.Color;
 
+/*
+ * IMPORTANT: Units currently in inches and radians. Modify subsystems and methods as appropriate.
+*/
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
