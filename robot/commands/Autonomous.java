@@ -7,15 +7,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class Autonomous extends SequentialCommandGroup {
 
-  public Autonomous(Drivetrain drivetrain) {
+  public Autonomous(Drivetrain drivetrain, AHRS gyro) {
     addCommands(
-      new InstantCommand(() -> drivetrain.arcadeDrive(0,0), drivetrain)
+      new DriveDistance(12, AutonomousConstants.kDriveSpeed, drivetrain), // distance in inches
+      new TurnToAngle(drivetrain, gyro, AutonomousConstants.kTurnSpeed, 180)
 
     );
   }

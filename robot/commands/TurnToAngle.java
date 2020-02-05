@@ -7,12 +7,29 @@
 
 package frc.robot.commands;
 
+import java.util.Timer;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Drivetrain;
 
 public class TurnToAngle extends CommandBase {
+
+  private final Drivetrain m_drive;
+  private final double m_rotationSpeed;
+  private final double m_targetAngle;
+  private final double m_initialAngle;
+  private final AHRS m_gyro;
   
-  public TurnToAngle() {
-    
+  // Angle needs to be in radians, as that is the superior unit mathematically speaking. (lol)
+  // RotateSpeed, on the other hand, is in ratio form (as used on all SpeedControllers)
+  public TurnToAngle(Drivetrain dt, AHRS gyro, double rotationSpeed, double targetAngle) {
+    m_drive = dt;
+    m_rotationSpeed = rotationSpeed;
+    m_gyro = gyro;
+    m_initialAngle = gyro.getAngle(); 
+    m_targetAngle = m_initialAngle + targetAngle;
   }
 
   // Called when the command is initially scheduled.
@@ -23,6 +40,7 @@ public class TurnToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_drive.arcadeDrive(0, m_rotationSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -33,6 +51,7 @@ public class TurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (m_gyro.getAngle() >= m_targetAngle) return true;
     return false;
   }
 }

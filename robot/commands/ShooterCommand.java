@@ -16,8 +16,8 @@ import frc.robot.Constants.VisionConstants;
 
 public class ShooterCommand extends CommandBase {
 
-  private ShooterSystem mShooter;
-  private VisionSystem mVision;
+  private ShooterSystem m_shooter;
+  private VisionSystem m_vision;
   private double distanceToTarget;
   private final double EPSILON = 0.01; // all error unaccounted for
 
@@ -26,16 +26,16 @@ public class ShooterCommand extends CommandBase {
    */
   public ShooterCommand(ShooterSystem tShooter, VisionSystem tVision) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mShooter = tShooter;
-    mVision = tVision;
-    addRequirements(mShooter);
+    m_shooter = tShooter;
+    m_vision = tVision;
+    addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     // get distance to target
-    distanceToTarget = mVision.rawDistanceToTarget();
+    distanceToTarget = m_vision.rawDistanceToTarget();
 
     /*
      * get velocity required to get to target:
@@ -52,7 +52,7 @@ public class ShooterCommand extends CommandBase {
             + (ShooterConstants.shooterHeight - VisionConstants.kTargetHeight))) + EPSILON;
 
     // convert velocity (in m/s) into unitless ratio
-    velocity /= (ShooterConstants.maxRPM / (120 * Math.PI)) * ShooterConstants.motorRadius;
+    velocity /= (ShooterConstants.maxRPM * 2.0 * Math.PI / (60)) * ShooterConstants.motorRadius;
 
     // don't run motor greater than max speed (on -1 to 1 ratio)
     if (velocity > 1)
@@ -61,24 +61,24 @@ public class ShooterCommand extends CommandBase {
       velocity = -1;
 
     // spin motor at calculated velocity
-    mShooter.manualSpinMotor(velocity);
+    m_shooter.manualSpinMotor(velocity);
 
     // sets target goal for PID Controller
-    mShooter.setSetpoint(velocity);
+    m_shooter.setSetpoint(velocity);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // Starts PID loop.
-    mShooter.enable();
+    m_shooter.enable();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     // Ends PID loop.
-    mShooter.reset();
+    m_shooter.reset();
   }
 
   // Returns true when the command should end.

@@ -63,9 +63,11 @@ public final class Constants {
 
     public static final class AutonomousConstants {
         // Drivetrain in auto
-        public static final double kDriveSpeed = 0;
-        public static final double kMaxSpeed = 0;
-        public static final double kWheelRadius = 0;
+        public static final double kDriveSpeed = 0.5;
+        public static final double kTurnSpeed = 0.5;
+        public static final double kMaxRPM = 6380;
+        public static final double kWheelRadius = 2.5; // inches
+        public static final double kRobotRadius = 0;
     }
 
     // Drivetrain

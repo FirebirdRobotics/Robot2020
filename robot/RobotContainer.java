@@ -7,12 +7,16 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.*;
+import frc.robot.commands.Autonomous;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,16 +41,17 @@ public class RobotContainer {
     private final HopperSystem m_hopper = new HopperSystem();
     private final IntakeSystem m_intake = new IntakeSystem();
 
-    // Define all Commands
-    // private final ExampleCommand m_command = new ExampleCommand();
-
     // Define all controllers
-    private final XboxController m_driverController = new XboxController(OIConstants.driverXboxPort); // driver: DT &
-                                                                                                      // related
-                                                                                                      // functions
-    private final XboxController m_operatorController = new XboxController(OIConstants.operatorXboxPort); // operator:
-                                                                                                          // all other
-                                                                                                          // mechanisms
+    // driver: DT & related functions
+    private final XboxController m_driverController = new XboxController(OIConstants.driverXboxPort);
+    // operator: all other mechanisms (currently not sure if necessary)
+    private final XboxController m_operatorController = new XboxController(OIConstants.operatorXboxPort);
+
+    // Create gyro object
+    private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
+    // Define all Commands
+    private final Autonomous m_autoCommand = new Autonomous(m_drivetrain, m_gyro);
 
     // Create a sendable chooser for auto programs
     // SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -58,11 +63,11 @@ public class RobotContainer {
         // Configure the button bindings w/ the below function
         configureButtonBindings();
 
-        // Configure default commands
+        // DRIVETRAIN
         m_drivetrain.setDefaultCommand(
-                        new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft),
-                                        m_driverController.getX(Hand.kLeft), m_driverController.getXButton()),
-                            m_drivetrain));
+                        new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft), 
+                            m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
+                        m_drivetrain));
     }
 
   private void configureButtonBindings() {
@@ -106,9 +111,9 @@ public class RobotContainer {
         .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
   }
 
-    // Uncomment this when we wanna add auto
-    // public Command getAutonomousCommand() {
+    // Autonomous
+    public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    // return m_autoCommand;
-    // }
+    return m_autoCommand;
+    }
 }
