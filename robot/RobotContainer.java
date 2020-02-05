@@ -59,12 +59,10 @@ public class RobotContainer {
         configureButtonBindings();
 
         // Configure default commands
-        m_drivetrain
-                .setDefaultCommand(
-                        new RunCommand(
-                                () -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft),
+        m_drivetrain.setDefaultCommand(
+                        new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft),
                                         m_driverController.getX(Hand.kLeft), m_driverController.getXButton()),
-                                m_drivetrain));
+                            m_drivetrain));
     }
 
   private void configureButtonBindings() {
