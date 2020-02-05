@@ -51,7 +51,7 @@ public class RobotContainer {
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
     // Define all Commands
-    private final Autonomous m_autoCommand = new Autonomous(m_drivetrain, m_gyro);
+    private final Autonomous m_autoCommand = new Autonomous(m_drivetrain, m_shooter, m_visionSystem, m_gyro);
 
     // Create a sendable chooser for auto programs
     // SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -65,9 +65,9 @@ public class RobotContainer {
 
         // DRIVETRAIN
         m_drivetrain.setDefaultCommand(
-                        new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft), 
-                            m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
-                        m_drivetrain));
+            new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft), 
+                m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
+            m_drivetrain));
     }
 
   private void configureButtonBindings() {
