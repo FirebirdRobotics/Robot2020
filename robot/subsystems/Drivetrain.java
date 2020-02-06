@@ -98,9 +98,9 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void updateDashboard(WPI_TalonFX talon, String talonName) {
-    SmartDashboard.putNumber("Sensor Vel. (" + talonName + ")", talon.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Sensor Pos. (" + talonName + ")", talon.getSelectedSensorPosition());
     SmartDashboard.putNumber("Output % (" + talonName + ")", talon.getMotorOutputPercent());
+    SmartDashboard.putNumber("Sensor Pos. (" + talonName + ")", talon.getSelectedSensorPosition());
+    // SmartDashboard.putNumber("Sensor Vel. (" + talonName + ")", talon.getSelectedSensorVelocity());
   }
 
   @Override

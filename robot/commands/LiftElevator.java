@@ -36,7 +36,7 @@ public class LiftElevator extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climb.releasedElevator();
+    m_climb.stopElevator();
   }
 
   // Returns true when the command should end.

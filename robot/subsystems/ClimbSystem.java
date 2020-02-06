@@ -39,12 +39,12 @@ public class ClimbSystem extends SubsystemBase {
       m_rightElevator.set(ClimbConstants.kElevatorSpeed);
       return false;
     } else {
-      releasedElevator();
+      stopElevator();
       return true;
     }
   }
 
-  public void releasedElevator() {
+  public void stopElevator() {
     m_leftElevator.set(0);
     m_rightElevator.set(0);
   }
