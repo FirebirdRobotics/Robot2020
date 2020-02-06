@@ -27,7 +27,7 @@ public class Autonomous extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new RunCommand(() -> vision.visionRoutineTape(drivetrain), drivetrain),
         new SequentialCommandGroup(
-          new WaitCommand(AutonomousConstants.kWaitTime),
+          new WaitCommand(AutonomousConstants.kWaitTime), // waits for 2 seconds so vision can center
           new ShooterCommand(shooter, vision) // will incorporate feeder later
     )));
   }

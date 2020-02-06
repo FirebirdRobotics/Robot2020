@@ -80,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void arcadeDrive(double forward, double turn) {
-    m_diffDrive.arcadeDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
+    m_diffDrive.arcadeDrive(-forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
     
     updateDashboard(m_leftMaster, "Left Master");
     updateDashboard(m_rightMaster, "Right Master");
@@ -89,7 +89,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void curvatureDrive(double forward, double turn, boolean isQuickTurn) {
-    m_diffDrive.curvatureDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
+    m_diffDrive.curvatureDrive(-forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
 
     updateDashboard(m_leftMaster, "Left Master");
     updateDashboard(m_rightMaster, "Right Master");
