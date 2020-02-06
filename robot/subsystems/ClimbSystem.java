@@ -29,16 +29,35 @@ public class ClimbSystem extends SubsystemBase {
     m_leftElevator.setInverted(false);
     m_rightElevator.setInverted(false);
     m_skiLift.setInverted(false);
+
   }
 
-  public void setElevatorPosition(double position) {
-    m_leftElevator.getEncoder().setPosition(position);
-    m_rightElevator.getEncoder().setPosition(position);
+  // set to encoder count, return boolean true when done
+  public boolean setElevatorPosition(double position) {
+    if (position > m_rightElevator.getEncoder().getPosition()) {
+      m_leftElevator.set(ClimbConstants.kElevatorSpeed);
+      m_rightElevator.set(ClimbConstants.kElevatorSpeed);
+      return false;
+    } else {
+      releasedElevator();
+      return true;
+    }
+  }
+
+  public void releasedElevator() {
+    m_leftElevator.set(0);
+    m_rightElevator.set(0);
   }
 
   public void moveSkiLift(double speed) {
     m_skiLift.set(speed);
   }
+
+  /*
+  public double getHeightEncoder () {
+    return m_rightElevator.getEncoder().getPosition();
+  }
+  */
 
   @Override
   public void periodic() {

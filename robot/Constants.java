@@ -24,13 +24,6 @@ import edu.wpi.first.wpilibj.util.Color;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    // set true if need to convert degrees to radians & inches to meters
-    public static final boolean angleConversionRequired = false;
-    public static final boolean distanceConversionRequired = false;
-
-    public static final class PhysicsConstants {
-        public static final double gAcceleration = 386.09; // in inches per second squared
-    }
 
     // OI
     public static final class OIConstants {
@@ -68,6 +61,9 @@ public final class Constants {
         public static final double kMaxRPM = 6380;
         public static final double kWheelRadius = 2.5; // inches
         public static final double kRobotRadius = 0;
+
+        // time to wait before shooting (after vision has begun)
+        public static final double kWaitTime = 2.0; // seconds
     }
 
     // Drivetrain
@@ -102,6 +98,7 @@ public final class Constants {
     public static final class ClimbConstants {
         // Speed constants
         public static final double kSkiLiftSpeed = 0.50; // constant speed for ski lift
+        public static final double kElevatorSpeed = 0.50; // speed that elevator rises
 
         // SparkMAX CAN ports
         public static final int skiLiftPort = 5;
@@ -221,7 +218,15 @@ public final class Constants {
 
     // Unit Conversion because the Math java functions use specific units
     public static class UnitConversionConstants {
-        public static final double angleConversionFactor = angleConversionRequired ? (Math.PI / 180) : 1; // angle to radians
+        // set true if need to convert degrees to radians & inches to meters
+        public static final boolean angleConversionRequired = false;
+        public static final boolean distanceConversionRequired = false;
+
+        public static final double angleConversionFactor = angleConversionRequired ? (Math.PI / 180) : 1; // angles to radians
         public static final double distanceConversionFactor = distanceConversionRequired ? 39.37 : 1; // inches to meters
+    }
+
+    public static final class PhysicsConstants {
+        public static final double gAcceleration = 386.09; // in inches per second squared
     }
 }

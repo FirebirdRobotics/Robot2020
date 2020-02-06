@@ -9,8 +9,10 @@ package frc.robot.commands;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ShooterSystem;
@@ -22,9 +24,11 @@ public class Autonomous extends SequentialCommandGroup {
     addCommands(
       new DriveDistance(12, AutonomousConstants.kDriveSpeed, drivetrain), // distance in inches
       new TurnToAngle(drivetrain, gyro, AutonomousConstants.kTurnSpeed, 180),
-      new InstantCommand(() -> vision.visionRoutineTape(drivetrain), drivetrain),
-      new ShooterCommand(shooter, vision)
-
-    );
+      new ParallelCommandGroup(
+        new RunCommand(() -> vision.visionRoutineTape(drivetrain), drivetrain),
+        new SequentialCommandGroup(
+          new WaitCommand(AutonomousConstants.kWaitTime),
+          new ShooterCommand(shooter, vision) // will incorporate feeder later
+    )));
   }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.*;
 import frc.robot.commands.Autonomous;
+import frc.robot.commands.LiftElevator;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -79,9 +80,9 @@ public class RobotContainer {
 
     // CLIMB SYSTEM
     new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
-        .whenPressed(() -> m_climb.setElevatorPosition(ClimbConstants.kElevatorLowPosition), m_climb);
+        .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
     new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
-        .whenPressed(() -> m_climb.setElevatorPosition(ClimbConstants.kElevatorHighPosition), m_climb);
+        .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
     new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
         .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
     new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)
