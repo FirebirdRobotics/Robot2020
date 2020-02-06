@@ -160,7 +160,7 @@ public final class Constants {
         public static final double motorRPM = 5000;
         
         // Maximum RPM for motor
-        public static final double maxRPM = 5874;
+        public static final double maxRPM = 5880;
 
         // SparkMAX CAN ports
         public static final int shooterFirstPort = 12;
