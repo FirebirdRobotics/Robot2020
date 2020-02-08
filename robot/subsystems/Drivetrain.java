@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.Faults;
+//import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;

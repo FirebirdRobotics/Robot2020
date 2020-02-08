@@ -8,8 +8,6 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -21,7 +19,6 @@ import frc.robot.commands.LiftElevator;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -52,7 +49,7 @@ public class RobotContainer {
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
     // Define all Commands
-    private final Autonomous m_autoCommand = new Autonomous(m_drivetrain, m_shooter, m_visionSystem, m_gyro);
+    private final Autonomous m_autoCommand = new Autonomous(m_drivetrain, m_shooter, m_visionSystem, m_gyro, m_hopper);
 
     // Create a sendable chooser for auto programs
     // SendableChooser<Command> m_chooser = new SendableChooser<>();

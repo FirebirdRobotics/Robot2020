@@ -15,12 +15,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.HopperSystem;
 import frc.robot.subsystems.ShooterSystem;
 import frc.robot.subsystems.VisionSystem;
 
 public class Autonomous extends SequentialCommandGroup {
 
-  public Autonomous(Drivetrain drivetrain, ShooterSystem shooter, VisionSystem vision, AHRS gyro) {
+  public Autonomous(Drivetrain drivetrain, ShooterSystem shooter, VisionSystem vision, AHRS gyro, HopperSystem hopper) {
     addCommands(
       new DriveDistance(12, AutonomousConstants.kDriveSpeed, drivetrain), // distance in inches
       new TurnToAngle(drivetrain, gyro, AutonomousConstants.kTurnSpeed, 180),
@@ -28,7 +29,9 @@ public class Autonomous extends SequentialCommandGroup {
         new RunCommand(() -> vision.visionRoutineTape(drivetrain), drivetrain),
         new SequentialCommandGroup(
           new WaitCommand(AutonomousConstants.kWaitTime), // waits for 2 seconds so vision can center
-          new ShooterCommand(shooter, vision) // will incorporate feeder later
+          new AutoShooterCommand(shooter, hopper, vision), // Shoot three times, may be incorporated into command later
+          new AutoShooterCommand(shooter, hopper, vision), 
+          new AutoShooterCommand(shooter, hopper, vision) 
     )));
   }
 }
