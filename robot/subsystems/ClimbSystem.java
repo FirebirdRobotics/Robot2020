@@ -15,32 +15,27 @@ import frc.robot.Constants.ClimbConstants;
 
 public class ClimbSystem extends SubsystemBase {
   
-  private final CANSparkMax m_leftElevator, m_rightElevator, m_skiLift;
+  private final CANSparkMax m_elevatorMotor, m_skiLift;
 
   public ClimbSystem() {
-    m_leftElevator = new CANSparkMax(ClimbConstants.elevatorFirstPort, MotorType.kBrushless);
-    m_rightElevator = new CANSparkMax(ClimbConstants.elevatorSecondPort, MotorType.kBrushless);
+    m_elevatorMotor = new CANSparkMax(ClimbConstants.elevatorPort, MotorType.kBrushless);
     m_skiLift = new CANSparkMax(ClimbConstants.skiLiftPort, MotorType.kBrushless);
 
-    m_leftElevator.getEncoder().setPosition(0);
-    m_rightElevator.getEncoder().setPosition(0);
+    m_elevatorMotor.getEncoder().setPosition(0);
     m_skiLift.getEncoder().setPosition(0);
 
-    m_leftElevator.setInverted(false);
-    m_rightElevator.setInverted(false);
+    m_elevatorMotor.setInverted(false);
     m_skiLift.setInverted(false);
 
   }
 
   // set to encoder count, return boolean true when done
   public boolean setElevatorPosition(double position) {
-    if (position < m_rightElevator.getEncoder().getPosition()) {
-      m_leftElevator.set(ClimbConstants.kElevatorSpeed);
-      m_rightElevator.set(ClimbConstants.kElevatorSpeed);
+    if (position < m_elevatorMotor.getEncoder().getPosition()) {
+      m_elevatorMotor.set(ClimbConstants.kElevatorSpeed);
       return false;
-    } else if (position > m_rightElevator.getEncoder().getPosition()) {
-      m_leftElevator.set(-ClimbConstants.kElevatorSpeed);
-      m_rightElevator.set(-ClimbConstants.kElevatorSpeed);
+    } else if (position > m_elevatorMotor.getEncoder().getPosition()) {
+      m_elevatorMotor.set(-ClimbConstants.kElevatorSpeed);
       return false;
     } else {
       stopElevator();
@@ -49,19 +44,12 @@ public class ClimbSystem extends SubsystemBase {
   }
 
   public void stopElevator() {
-    m_leftElevator.set(0);
-    m_rightElevator.set(0);
+    m_elevatorMotor.set(0);
   }
 
   public void moveSkiLift(double speed) {
     m_skiLift.set(speed);
   }
-
-  /*
-  public double getHeightEncoder () {
-    return m_rightElevator.getEncoder().getPosition();
-  }
-  */
 
   @Override
   public void periodic() {

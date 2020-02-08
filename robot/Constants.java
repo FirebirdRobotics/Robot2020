@@ -99,8 +99,7 @@ public final class Constants {
 
         // SparkMAX CAN ports
         public static final int skiLiftPort = 5;
-        public static final int elevatorFirstPort = 6;
-        public static final int elevatorSecondPort = 7;
+        public static final int elevatorPort = 6;
 
         // Encoder counts
         public static final double kElevatorLowPosition = 0;
@@ -113,7 +112,7 @@ public final class Constants {
         public static final double kColorSpinnerSpeed = 0.50;
 
         // SparkMAX CAN port
-        public static final int colorWheelPort = 8;
+        public static final int colorWheelPort = 7;
         
         // Solenoid port
         public static final int spinnerSolenoid = 0;
@@ -131,8 +130,7 @@ public final class Constants {
         public static final double kIntakeSpeed = 0.50;
 
         // SparkMAX CAN ports
-        public static final int intakeLeftPort = 9;
-        public static final int intakeRightPort = 10;
+        public static final int intakePort = 8;
 
         // Solenoid ports
         public static final int intakeSolenoidRight = 1;
@@ -145,7 +143,7 @@ public final class Constants {
         public static final double kHopperSpeed = 0.50;
 
         // SparkMAX CAN ports
-        public static final int hopperPort = 11;
+        public static final int hopperPort = 9;
     }
 
     // Shooter
@@ -157,8 +155,8 @@ public final class Constants {
         public static final double maxRPM = 5880;
 
         // SparkMAX CAN ports
-        public static final int shooterFirstPort = 12;
-        public static final int shooterSecondPort = 13;
+        public static final int shooterFirstPort = 10;
+        public static final int shooterSecondPort = 11;
 
         // PID Constants
         public static final double kP = 0;
@@ -176,7 +174,7 @@ public final class Constants {
 
     // LEDs
     public static final class LEDConstants {
-        public static final int revBlinkinPort = 14;
+        public static final int revBlinkinPort = 12;
 
         public static final double colorOne = 0;
         public static final double colorTwo = 0;

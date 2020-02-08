@@ -15,17 +15,15 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSystem extends SubsystemBase {
   
-  private final CANSparkMax m_intakeLeft, m_intakeRight;
+  private final CANSparkMax m_intakeMotor;
 
   public IntakeSystem() {
-    m_intakeLeft = new CANSparkMax(IntakeConstants.intakeLeftPort, MotorType.kBrushless);
-    m_intakeRight = new CANSparkMax(IntakeConstants.intakeRightPort, MotorType.kBrushless);
+    m_intakeMotor = new CANSparkMax(IntakeConstants.intakePort, MotorType.kBrushless);
 
   }
 
   public void runIntake(double speed) {
-    m_intakeLeft.set(speed);
-    m_intakeRight.set(speed);
+    m_intakeMotor.set(speed);
   }
 
   // no idea what this function requires right now, hopefully its pneumatic
