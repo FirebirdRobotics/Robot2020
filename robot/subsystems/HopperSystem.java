@@ -26,11 +26,11 @@ public class HopperSystem extends SubsystemBase {
     m_hopperMotor.set(speed);
   }
 
-  public void updateCapacity () {
-    count ++; // etc, etc; I do not know which sensor we are using, so for now this just incereases count
+  public void updateCapacity() {
+    count++; // etc, etc; I do not know which sensor we are using, so for now this just incereases count
   }
 
-  public boolean full () {
+  public boolean empty() {
     return true;
   }
 

@@ -24,11 +24,10 @@ public class ShooterCommand extends CommandBase {
   /**
    * Creates a new ShooterCommand.
    */
-  public ShooterCommand(ShooterSystem tShooter, VisionSystem tVision) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_shooter = tShooter;
-    m_vision = tVision;
-    addRequirements(m_shooter);
+  public ShooterCommand(ShooterSystem shooter, VisionSystem vision) {
+    m_shooter = shooter;
+    m_vision = vision;
+    addRequirements(m_shooter, m_vision);
   }
 
   // Called when the command is initially scheduled.

@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.subsystems.HopperSystem;
 import frc.robot.subsystems.ShooterSystem;
@@ -19,44 +20,42 @@ public class AutoShooterCommand extends ShooterCommand {
    */
 
   private final HopperSystem m_hopper;
-  private final Timer m_timer = new Timer();
-  private final Timer ms_timer = new Timer();
-  private final double shooterWarmUpTime = 0.5;
-  private final double hopperWaitTime = 2;
-  private final double shooterWaitTime = 2;
+  private final Timer m_shooterTimer = new Timer();
+  private final Timer m_hopperTimer = new Timer();
 
+  public AutoShooterCommand(ShooterSystem shooter, HopperSystem hopper, VisionSystem vision) {
+    super(shooter, vision);
+    m_hopper = hopper;
+    addRequirements(m_hopper);
 
-  public AutoShooterCommand(ShooterSystem tShooter, HopperSystem tHopper, VisionSystem tVision) {
-    super (tShooter, tVision);
-    m_hopper = tHopper;
-    m_timer.start();
-    // Use addRequirements() here to declare subsystem dependencies.
+    m_shooterTimer.start();
+    m_hopperTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     super.execute();
-    if (m_timer.get() < shooterWarmUpTime) {
-      if (ms_timer.get() < hopperWaitTime) m_hopper.runHopper(HopperConstants.kHopperSpeed);
-      else{
-        if (ms_timer.get() < shooterWaitTime) {}
-        else ms_timer.reset();
-      } 
+    if (m_shooterTimer.get() > AutonomousConstants.kShooterWarmUpTime) { // wait for shooter to warm up
+      if (m_hopperTimer.get() < AutonomousConstants.kHopperWaitTime) {
+        m_hopper.runHopper(HopperConstants.kHopperSpeed); // run hopper for kHopperWaitTime
+      } else if (m_hopperTimer.get() > AutonomousConstants.kShooterWaitTime) {
+        m_hopperTimer.reset(); // reset hopper timer if no ball is in shooter
+      }
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_timer.reset();
+    m_shooterTimer.reset();
+    m_hopperTimer.reset();
     super.end(interrupted);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_hopper.full()) return true;
-    return false;
+    return m_hopper.empty();
   }
 }

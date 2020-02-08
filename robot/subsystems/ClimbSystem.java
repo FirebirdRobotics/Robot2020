@@ -34,9 +34,13 @@ public class ClimbSystem extends SubsystemBase {
 
   // set to encoder count, return boolean true when done
   public boolean setElevatorPosition(double position) {
-    if (position > m_rightElevator.getEncoder().getPosition()) {
+    if (position < m_rightElevator.getEncoder().getPosition()) {
       m_leftElevator.set(ClimbConstants.kElevatorSpeed);
       m_rightElevator.set(ClimbConstants.kElevatorSpeed);
+      return false;
+    } else if (position > m_rightElevator.getEncoder().getPosition()) {
+      m_leftElevator.set(-ClimbConstants.kElevatorSpeed);
+      m_rightElevator.set(-ClimbConstants.kElevatorSpeed);
       return false;
     } else {
       stopElevator();

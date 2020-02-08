@@ -62,8 +62,11 @@ public final class Constants {
         public static final double kWheelRadius = 2.5; // inches
         public static final double kRobotRadius = 0;
 
-        // time to wait before shooting (after vision has begun)
-        public static final double kWaitTime = 2.0; // seconds
+        // Time constants
+        public static final double kWaitTime = 2.0; // seconds, time to wait for auto centering (limelight)
+        public static final double kShooterWarmUpTime = 0.5; // seconds, time to wait for shooter to warm up
+        public static final double kHopperWaitTime = 2.0; // seconds, time for one ball to pass from hopper to shooter        
+        public static final double kShooterWaitTime = 2.0; // seconds, time for one ball to shoot        
     }
 
     // Drivetrain

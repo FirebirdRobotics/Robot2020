@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSystem;
 
 public class LiftElevator extends CommandBase {
-  
+
   private final ClimbSystem m_climb;
   private boolean m_stop;
   private double m_position;
