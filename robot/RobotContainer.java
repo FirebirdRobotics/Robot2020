@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.commands.Autonomous;
 import frc.robot.commands.LiftElevator;
@@ -52,7 +53,7 @@ public class RobotContainer {
     private final Autonomous m_autoCommand = new Autonomous(m_drivetrain, m_shooter, m_visionSystem, m_gyro, m_hopper);
 
     // Create a sendable chooser for auto programs
-    // SendableChooser<Command> m_chooser = new SendableChooser<>();
+    SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -66,6 +67,12 @@ public class RobotContainer {
             new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft), 
                 m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
             m_drivetrain));
+
+        // AUTONOMOUS
+        m_chooser.setDefaultOption("Auto 1", m_autoCommand);
+        // m_chooser.addOption(name, object);
+
+        SmartDashboard.putData("Autonomous", m_chooser);
     }
 
   private void configureButtonBindings() {
@@ -112,6 +119,6 @@ public class RobotContainer {
     // Autonomous
     public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+        return m_chooser.getSelected();
     }
 }

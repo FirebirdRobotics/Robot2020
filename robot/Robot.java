@@ -7,9 +7,14 @@
 
 package frc.robot;
 
+import javax.rmi.ssl.SslRMIClientSocketFactory;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.VisionConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -65,7 +70,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -89,6 +94,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    SmartDashboard.putNumber("test", 0);
+    SmartDashboard.putNumber("Drive kP", 0);
+    SmartDashboard.putNumber("Drive kI", 0);
+    SmartDashboard.putNumber("Drive kD", 0);
   }
 
   /**
@@ -96,6 +106,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    System.out.println("test value: " + SmartDashboard.getNumber("test", 1));
+    VisionConstants.kpDistance = SmartDashboard.getNumber("Drive kP", 0);
+    VisionConstants.kiDistance = SmartDashboard.getNumber("Drive kI", 0);
+    VisionConstants.kdDistance = SmartDashboard.getNumber("Drive kD", 0);
   }
 
   @Override

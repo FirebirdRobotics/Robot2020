@@ -9,7 +9,6 @@ package frc.robot;
 
 import com.revrobotics.ColorMatch;
 
-//import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -87,11 +86,6 @@ public final class Constants {
         public static final int kPeakTimeMs = 0; // How long current must exceed threshold (seconds) before limiting occurs.
         public static final int kContCurrentAmps = 10; // Current must exceed this threshold (amperes) before limiting occurs.
         public static final int kTimeoutMs = 30; // Amount of time (in milliseconds) to wait for a specified element to be found before an error is thrown
-
-        // PID Constants
-        public static final double kP = 0;
-        public static final double kI = 0;
-        public static final double kD = 0;
 
         // Deadband: makes sure controllers dont move motors if joystick is accidentally moved a small amount
         public static final double kDeadband = 0.1;
@@ -194,9 +188,9 @@ public final class Constants {
         public static final double kpRotation = 0.20; // proportional
 
         // PID Constants (drive)
-        public static final double kpDistance = 0.70; // proportional
-        public static final double kiDistance = 0.00; // integral
-        public static final double kdDistance = 0.00; // derivative
+        public static double kpDistance = 0.70; // proportional
+        public static double kiDistance = 0.00; // integral
+        public static double kdDistance = 0.00; // derivative
         public static final double kTimePerLoop = 0.02; // robot updates every 0.02 seconds
 
         // Minimum power given to DT needed to overcome friction; helps robot move & rotate at low speeds

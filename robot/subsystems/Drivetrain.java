@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-//import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -79,6 +78,7 @@ public class Drivetrain extends SubsystemBase {
     m_talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, DriveConstants.kTimeoutMs);
   }
 
+  // ARCADE DRIVE = 1 STICK
   public void arcadeDrive(double forward, double turn) {
     m_diffDrive.arcadeDrive(-forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
     
@@ -88,6 +88,7 @@ public class Drivetrain extends SubsystemBase {
     updateDashboard(m_rightSlave, "Right Slave");
   }
 
+  // CURVATURE DRIVE = 2 STICK + QUICK TURN BUTTON
   public void curvatureDrive(double forward, double turn, boolean isQuickTurn) {
     m_diffDrive.curvatureDrive(-forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
 
