@@ -57,7 +57,7 @@ public final class Constants {
         // Drivetrain in auto
         public static final double kDriveSpeed = 0.5;
         public static final double kTurnSpeed = 0.5;
-        public static final double kMaxRPM = 6380;
+        public static final double kMaxRPM = 6380; // max RPM of Falcon500s
         public static final double kWheelRadius = 2.5; // inches
         public static final double kRobotRadius = 0;
 
@@ -152,7 +152,7 @@ public final class Constants {
         public static final double motorRPM = 5000;
         
         // Maximum RPM for motor
-        public static final double maxRPM = 5880;
+        public static final double maxRPM = 5880; // max RPM of NEOs
 
         // SparkMAX CAN ports
         public static final int shooterFirstPort = 10;
@@ -206,22 +206,27 @@ public final class Constants {
         public static double closestTargetDistance = 0; // for using target distance
 
         // DISTANCE CALC STUFF (trig)
-        public static final double kTargetHeight = 92 * UnitConversionConstants.distanceConversionFactor; // height of target above floor (in)
-        public static final double kCameraHeight = 47.5 * UnitConversionConstants.distanceConversionFactor; // height of camera above floor (in)
-        public static final double kMountingAngle = 30 * UnitConversionConstants.angleConversionFactor; // angle that camera is mounted at (deg)
+        public static final double kTargetHeight = FieldConstants.kTargetHeight; // height of target above floor (in)
+        public static final double kLimelightHeight = 47.5; // height of camera above floor (in)
+        public static final double kMountingAngle = 30.0; // angle that camera is mounted at (deg)
     }
 
     // Unit Conversion because the Math java functions use specific units
     public static class UnitConversionConstants {
-        // set true if need to convert degrees to radians & inches to meters
-        public static final boolean angleConversionRequired = false;
-        public static final boolean distanceConversionRequired = false;
-
-        public static final double angleConversionFactor = angleConversionRequired ? (Math.PI / 180) : 1; // angles to radians
-        public static final double distanceConversionFactor = distanceConversionRequired ? 39.37 : 1; // inches to meters
+        public static final double angleConversionFactor = (Math.PI / 180); // angles to radians
+        public static final double distanceConversionFactor = 39.37; // inches to meters
     }
 
     public static final class PhysicsConstants {
         public static final double gAcceleration = 386.09; // in inches per second squared
+    }
+
+    public static final class FieldConstants {
+        // All measurements are in inches
+        public static final double kInitiationLine = 120.0;
+        public static final double kTrenchToDriverStation = 200.0;
+        public static final double kInitiationLineToTrench = 80.0;
+        public static final double kTargetHeight = 98.25;
+        public static final double kOuterToInnerTarget = 29.25;
     }
 }

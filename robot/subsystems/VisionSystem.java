@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.UnitConversionConstants;
 import frc.robot.Constants.VisionConstants;
 
 public class VisionSystem extends SubsystemBase {
@@ -192,8 +193,8 @@ public class VisionSystem extends SubsystemBase {
 
     // the only thing that changes in this equation is targetAngle, which is ty in
     // this project
-    return (VisionConstants.kTargetHeight - VisionConstants.kCameraHeight)
-        / Math.tan(VisionConstants.kMountingAngle + targetAngle);
+    return (VisionConstants.kTargetHeight - VisionConstants.kLimelightHeight)
+        / Math.tan((VisionConstants.kMountingAngle + targetAngle) * UnitConversionConstants.angleConversionFactor);
   }
 
   public double rawDistanceToTarget() {
