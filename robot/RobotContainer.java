@@ -64,7 +64,7 @@ public class RobotContainer {
 
         // DRIVETRAIN
         m_drivetrain.setDefaultCommand(
-            new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft), 
+            new InstantCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft), 
                 m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
             m_drivetrain));
 
