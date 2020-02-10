@@ -29,7 +29,7 @@ public class Autonomous extends SequentialCommandGroup {
         new RunCommand(() -> vision.visionRoutineTape(drivetrain), drivetrain),
         new SequentialCommandGroup(
           new WaitCommand(AutonomousConstants.kWaitTime), // waits for 2 seconds so vision can center
-          new AutoShooterCommand(shooter, hopper, vision) // Shoot all balls
+          new HopperShooterCommand(shooter, hopper, vision, 3) // Shoot all balls
     )));
   }
 }

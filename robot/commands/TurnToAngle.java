@@ -52,7 +52,6 @@ public class TurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_gyro.getAngle() >= m_targetAngle) return true;
-    return false;
+    return (m_gyro.getAngle() >= m_targetAngle);
   }
 }

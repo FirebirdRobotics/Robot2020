@@ -10,24 +10,27 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HopperConstants;
 
 public class HopperSystem extends SubsystemBase {
   
   private final CANSparkMax m_hopperMotor;
-  private double count;
+  private final Solenoid m_hopperPiston;
 
   public HopperSystem() {
     m_hopperMotor = new CANSparkMax(HopperConstants.hopperPort, MotorType.kBrushless);
+    m_hopperPiston = new Solenoid(HopperConstants.hopperSolenoid);
   }
 
   public void runHopper(double speed) {
     m_hopperMotor.set(speed);
   }
 
-  public void updateCapacity() {
-    count++; // etc, etc; I do not know which sensor we are using, so for now this just incereases count
+  // using a single solenoid as double solenoid
+  public void toggleSolenoid() {
+    m_hopperPiston.set(!m_hopperPiston.get());
   }
 
   public boolean empty() {

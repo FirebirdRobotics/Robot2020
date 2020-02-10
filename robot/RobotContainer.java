@@ -11,7 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.XboxController.Button;
+//import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
@@ -44,7 +44,7 @@ public class RobotContainer {
     // driver: DT & related functions
     private final XboxController m_driverController = new XboxController(OIConstants.driverXboxPort);
     // operator: all other mechanisms (currently not sure if necessary)
-    private final XboxController m_operatorController = new XboxController(OIConstants.operatorXboxPort);
+    // private final XboxController m_operatorController = new XboxController(OIConstants.operatorXboxPort);
 
     // Create gyro object
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
@@ -64,7 +64,7 @@ public class RobotContainer {
 
         // DRIVETRAIN
         m_drivetrain.setDefaultCommand(
-            new RunCommand(() -> m_drivetrain.curvatureDrive(m_driverController.getY(Hand.kLeft), 
+            new RunCommand(() -> m_drivetrain.curvatureDrive(-m_driverController.getY(Hand.kLeft), 
                 m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
             m_drivetrain));
 
@@ -99,6 +99,8 @@ public class RobotContainer {
     // HOPPER SYSTEM
     new JoystickButton(m_driverController, OIConstants.b_hopper.value)
         .whileHeld(() -> m_hopper.runHopper(HopperConstants.kHopperSpeed), m_hopper);
+    new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
+        .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
 
     // INTAKE SYSTEM
     new JoystickButton(m_driverController, OIConstants.b_intake.value)

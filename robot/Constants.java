@@ -41,6 +41,7 @@ public final class Constants {
 
         // HOPPER SYSTEM
         public static final Button b_hopper = Button.kA;
+        public static final Button b_hopperPiston = Button.kA;
 
         // INTAKE SYSTEM
         public static final Button b_intake = Button.kA;
@@ -53,11 +54,11 @@ public final class Constants {
         public static final Button b_visionRoutineTape = Button.kA;
     }
 
+    // Autonomous
     public static final class AutonomousConstants {
         // Drivetrain in auto
         public static final double kDriveSpeed = 0.5;
         public static final double kTurnSpeed = 0.5;
-        public static final double kMaxRPM = 6380; // max RPM of Falcon500s
         public static final double kWheelRadius = 2.5; // inches
         public static final double kRobotRadius = 0;
 
@@ -88,7 +89,7 @@ public final class Constants {
         public static final int kTimeoutMs = 30; // Amount of time (in milliseconds) to wait for a specified element to be found before an error is thrown
 
         // Deadband: makes sure controllers dont move motors if joystick is accidentally moved a small amount
-        public static final double kDeadband = 0.1;
+        public static final double kDeadband = 0.05;
     }
 
     // Climbing
@@ -122,6 +123,7 @@ public final class Constants {
         public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
         public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
         public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+        // 
     }
 
     // Intake
@@ -134,7 +136,7 @@ public final class Constants {
 
         // Solenoid ports
         public static final int intakeSolenoidRight = 1;
-        public static final int intakeSolenoidLeft = 3;
+        public static final int intakeSolenoidLeft = 2;
     }
 
     // Hopper
@@ -144,6 +146,9 @@ public final class Constants {
 
         // SparkMAX CAN ports
         public static final int hopperPort = 9;
+
+        // Solenoid ports
+        public static final int hopperSolenoid = 3;
     }
 
     // Shooter
@@ -151,9 +156,6 @@ public final class Constants {
         // Target RPM for shooter
         public static final double motorRPM = 5000;
         
-        // Maximum RPM for motor
-        public static final double maxRPM = 5880; // max RPM of NEOs
-
         // SparkMAX CAN ports
         public static final int shooterFirstPort = 10;
         public static final int shooterSecondPort = 11;
@@ -176,8 +178,10 @@ public final class Constants {
     public static final class LEDConstants {
         public static final int revBlinkinPort = 12;
 
-        public static final double colorOne = 0;
-        public static final double colorTwo = 0;
+        // Rev Blinkin, page 14: http://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
+        public static final double kRed = 0.61;
+        public static final double kYellow = 0.69;
+        public static final double kBlack = 0.99;
     }
 
     // Vision
@@ -219,6 +223,11 @@ public final class Constants {
 
     public static final class PhysicsConstants {
         public static final double gAcceleration = 386.09; // in inches per second squared
+    }
+
+    public static final class MotorConstants {
+        public static final double kNeoRPM = 5880; // max RPM of NEOs
+        public static final double kFalconRPM = 6380; // max RPM of Falcon500s
     }
 
     public static final class FieldConstants {

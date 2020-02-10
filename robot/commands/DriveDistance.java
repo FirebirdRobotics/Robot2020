@@ -8,8 +8,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveDistance extends CommandBase {
@@ -23,8 +25,16 @@ public class DriveDistance extends CommandBase {
   public DriveDistance(double distance, double velocity, Drivetrain dt) {
     if (velocity < -1) velocity = -1;
     if (velocity > 1) velocity = 1;
-    m_time = distance / (velocity * ((AutonomousConstants.kMaxRPM * 2 * Math.PI) / 60) * AutonomousConstants.kWheelRadius);
-    System.out.println("calculation: " + m_time);
+
+    /*
+     * time = distance / velocity
+     * 
+     * velocity passed in as ratio (-1 to 1) so need to convert to RPM
+     * 
+     * (ratio velocity) * (max RPM of motor) * (2pi to convert to radians) * (1/60 to convert to minutes)
+     */
+    m_time = distance / (velocity * MotorConstants.kFalconRPM * ((2 * Math.PI) / 60) * AutonomousConstants.kWheelRadius);
+    SmartDashboard.putNumber("Time of drive (auto)", m_time);
     m_drive = dt;
     m_velocity = velocity;
   }
@@ -53,7 +63,6 @@ public class DriveDistance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_timer.get() > m_time) return true;
-    return false;
+    return (m_timer.get() > m_time);
   }
 }

@@ -20,6 +20,7 @@ public class LEDSystem extends SubsystemBase {
 
   }
 
+  // Go to page 14, hopefully you have internet: http://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
   public void setColor(double color) {
     revBlinkin.set(color);
   }

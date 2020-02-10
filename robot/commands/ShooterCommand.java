@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSystem;
 import frc.robot.subsystems.VisionSystem;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.PhysicsConstants;
 import frc.robot.Constants.VisionConstants;
 
@@ -51,7 +52,7 @@ public class ShooterCommand extends CommandBase {
             + (ShooterConstants.shooterHeight - VisionConstants.kTargetHeight))) + EPSILON;
 
     // convert velocity (in m/s) into unitless ratio
-    velocity /= (ShooterConstants.maxRPM * 2.0 * Math.PI / (60)) * ShooterConstants.motorRadius;
+    velocity /= (MotorConstants.kNeoRPM * 2.0 * Math.PI / (60)) * ShooterConstants.motorRadius;
 
     // don't run motor greater than max speed (on -1 to 1 ratio)
     if (velocity > 1)

@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -48,23 +49,45 @@ public class Drivetrain extends SubsystemBase {
     m_leftSlave.follow(m_leftMaster);
     m_rightSlave.follow(m_rightMaster);
 
-    m_leftMaster.setInverted(false); // CHANGE THESE UNTIL ROBOT DRIVES FORWARD
-    m_rightMaster.setInverted(true); // CHANGE THESE UNTIL ROBOT DRIVES FORWARD
-
+    m_leftMaster.setInverted(true); // CHANGE THESE UNTIL ROBOT DRIVES FORWARD
+    m_rightMaster.setInverted(false); // CHANGE THESE UNTIL ROBOT DRIVES FORWARD
     m_leftSlave.setInverted(InvertType.FollowMaster);
     m_rightSlave.setInverted(InvertType.FollowMaster);
 
     // flip so that motor output and sensor velocity are same polarity
     m_leftMaster.setSensorPhase(false);
-    m_rightMaster.setSensorPhase(true);
+    m_rightMaster.setSensorPhase(false);
     m_leftSlave.setSensorPhase(false);
-    m_rightSlave.setSensorPhase(true);
+    m_rightSlave.setSensorPhase(false);
+
+    // set mode of motors
+    setNeutralMode(NeutralMode.Coast);
 
     // diffdrive assumes by default that right side must be negative- change to false for master/slave config
     m_diffDrive.setRightSideInverted(false); // DO NOT CHANGE THIS
 
-    // deadband: if you accidentally move the joystick a small amnt, it won't move if within deadband
+    // deadband: motors wont move if speed of motors is within deadband
     m_diffDrive.setDeadband(DriveConstants.kDeadband);
+  }
+
+  // ARCADE DRIVE = 1 STICK
+  public void arcadeDrive(double forward, double turn) {
+    m_diffDrive.arcadeDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
+    
+    updateDashboard(m_leftMaster, "Left Master");
+    updateDashboard(m_rightMaster, "Right Master");
+    updateDashboard(m_leftSlave, "Left Slave");
+    updateDashboard(m_rightSlave, "Right Slave");
+  }
+
+  // CURVATURE DRIVE = 2 STICK + QUICK TURN BUTTON
+  public void curvatureDrive(double forward, double turn, boolean isQuickTurn) {
+    m_diffDrive.curvatureDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
+
+    updateDashboard(m_leftMaster, "Left Master");
+    updateDashboard(m_rightMaster, "Right Master");
+    updateDashboard(m_leftSlave, "Left Slave");
+    updateDashboard(m_rightSlave, "Right Slave");
   }
 
   public void configTalon(WPI_TalonFX m_talon) {
@@ -76,27 +99,16 @@ public class Drivetrain extends SubsystemBase {
 
     // setup encoders; talonFX integrated sensor, closed loop
     m_talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, DriveConstants.kTimeoutMs);
+    m_talon.setSelectedSensorPosition(0); // resets encoder counts
   }
 
-  // ARCADE DRIVE = 1 STICK
-  public void arcadeDrive(double forward, double turn) {
-    m_diffDrive.arcadeDrive(-forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
-    
-    updateDashboard(m_leftMaster, "Left Master");
-    updateDashboard(m_rightMaster, "Right Master");
-    updateDashboard(m_leftSlave, "Left Slave");
-    updateDashboard(m_rightSlave, "Right Slave");
-  }
-
-  // CURVATURE DRIVE = 2 STICK + QUICK TURN BUTTON
-  public void curvatureDrive(double forward, double turn, boolean isQuickTurn) {
-    m_diffDrive.curvatureDrive(-forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
-
-    updateDashboard(m_leftMaster, "Left Master");
-    updateDashboard(m_rightMaster, "Right Master");
-    updateDashboard(m_leftSlave, "Left Slave");
-    updateDashboard(m_rightSlave, "Right Slave");
-  }
+  // set neutral mode
+  public void setNeutralMode(NeutralMode neutralMode) {
+		m_leftMaster.setNeutralMode(neutralMode);
+		m_leftSlave.setNeutralMode(neutralMode);
+		m_rightMaster.setNeutralMode(neutralMode);
+		m_rightSlave.setNeutralMode(neutralMode);
+	}
 
   public void updateDashboard(WPI_TalonFX talon, String talonName) {
     SmartDashboard.putNumber("Output % (" + talonName + ")", talon.getMotorOutputPercent());
