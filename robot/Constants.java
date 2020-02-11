@@ -83,7 +83,7 @@ public final class Constants {
 
         // Current limiting constants
         public static final boolean kCurrentLimitingEnabled = true; // True/False to enable/disable limit feature.
-        public static final int kPeakCurrentAmps = 15; // The "holding" current (amperes) to limit to when feature is activated.
+        public static final int kPeakCurrentAmps = 38; // The "holding" current (amperes) to limit to when feature is activated.
         public static final int kPeakTimeMs = 0; // How long current must exceed threshold (seconds) before limiting occurs.
         public static final int kContCurrentAmps = 10; // Current must exceed this threshold (amperes) before limiting occurs.
         public static final int kTimeoutMs = 30; // Amount of time (in milliseconds) to wait for a specified element to be found before an error is thrown
