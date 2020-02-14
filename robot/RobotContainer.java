@@ -39,7 +39,7 @@ public class RobotContainer {
     private final ColorWheelSystem m_colorSpinner = new ColorWheelSystem();
     private final HopperSystem m_hopper = new HopperSystem();
     private final IntakeSystem m_intake = new IntakeSystem();
-    // private final OrchestraSystem m_orchestra = new OrchestraSystem(new WPI_TalonFX(1), new WPI_TalonFX(2));
+    private final OrchestraSystem m_orchestra = new OrchestraSystem(m_drivetrain);
 
     // Define all controllers
     // driver: DT & related functions
@@ -119,10 +119,14 @@ public class RobotContainer {
         .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
 
     // ORCHESTRA
-    // new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic).whenPressed(() -> m_orchestra);
-    // new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic).whenPressed(() -> m_orchestra);
-    // new JoystickButton(m_driverController, OIConstants.b_nextSong).whenPressed(() -> m_orchestra);
-    // new JoystickButton(m_driverController, OIConstants.b_prevSong).whenPressed(() -> m_orchestra);
+    new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)
+        .whenPressed(() -> m_orchestra.togglePauseMusic());
+    new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic.value)
+        .whenPressed(() -> m_orchestra.toggleStopMusic());
+    new JoystickButton(m_driverController, OIConstants.b_nextSong.value)
+        .whenPressed(() -> m_orchestra.nextSong());
+    new JoystickButton(m_driverController, OIConstants.b_prevSong.value)
+        .whenPressed(() -> m_orchestra.previousSong());
   }
 
     // Autonomous

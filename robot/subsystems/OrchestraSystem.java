@@ -30,7 +30,9 @@ public class OrchestraSystem extends SubsystemBase {
 
   private ArrayList<TalonFX> m_instruments = new ArrayList<TalonFX>();
 
-  public OrchestraSystem(WPI_TalonFX[] talons) {
+  public OrchestraSystem(Drivetrain drivetrain) {
+
+    WPI_TalonFX[] talons = drivetrain.getMotors();
 
     /* Initialize the TalonFX's to be used */
     for (int i = 0; i < talons.length; i++) {
@@ -62,7 +64,7 @@ public class OrchestraSystem extends SubsystemBase {
     m_loadingTimeLoops = 10;
   }
 
-  public void togglePauseSong() {
+  public void togglePauseMusic() {
     if (m_orchestra.isPlaying()) {
       m_orchestra.pause();
       System.out.println("Song paused.");
@@ -72,7 +74,7 @@ public class OrchestraSystem extends SubsystemBase {
     }
   }
 
-  public void toggleStopSong() {
+  public void toggleStopMusic() {
     if (m_orchestra.isPlaying()) {
       m_orchestra.stop();
       System.out.println("Song stopped.");

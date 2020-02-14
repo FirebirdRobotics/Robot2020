@@ -183,9 +183,11 @@ public class Drivetrain extends SubsystemBase {
 		m_rightSlave.setNeutralMode(neutralMode);
   }
   
-  // public WPI_TalonFX[] getMotors() {
-  //   return [m_leftMaster, m_leftSlave, m_rightMaster, m_rightSlave];
-  // }
+  public WPI_TalonFX[] getMotors() {
+    WPI_TalonFX[] motors = {m_leftMaster, m_leftSlave, m_rightMaster, m_rightSlave};
+
+    return motors;
+  }
 
   public void updateDashboard(final WPI_TalonFX talon, final String talonName) {
     SmartDashboard.putNumber("Output % (" + talonName + ")", talon.getMotorOutputPercent());
