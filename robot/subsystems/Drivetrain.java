@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -71,7 +72,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   // ARCADE DRIVE = 1 STICK
-  public void arcadeDrive(double forward, double turn) {
+  public void arcadeDrive(final double forward, final double turn) {
     m_diffDrive.arcadeDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
     
     updateDashboard(m_leftMaster, "Left Master");
@@ -81,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   // CURVATURE DRIVE = 2 STICK + QUICK TURN BUTTON
-  public void curvatureDrive(double forward, double turn, boolean isQuickTurn) {
+  public void curvatureDrive(final double forward, final double turn, final boolean isQuickTurn) {
     m_diffDrive.curvatureDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
 
     updateDashboard(m_leftMaster, "Left Master");
@@ -90,7 +91,12 @@ public class Drivetrain extends SubsystemBase {
     updateDashboard(m_rightSlave, "Right Slave");
   }
 
-  public void configTalon(WPI_TalonFX m_talon) {
+  // AUTO DRIVE = for autonomous commands
+  public void autoDrive(final double forward, final double turn) {
+    m_diffDrive.arcadeDrive(forward, turn, false);
+  }
+
+  public void configTalon(final WPI_TalonFX m_talon) {
     // factory reset hardware to make sure nothing unexpected
     m_talon.configFactoryDefault();
 
@@ -102,15 +108,86 @@ public class Drivetrain extends SubsystemBase {
     m_talon.setSelectedSensorPosition(0); // resets encoder counts
   }
 
+  public void resetEncoders() {
+    m_rightMaster.setSelectedSensorPosition(0);
+    m_rightSlave.setSelectedSensorPosition(0);
+    m_leftMaster.setSelectedSensorPosition(0);
+    m_leftSlave.setSelectedSensorPosition(0);
+  }
+
+  // autonomously drive using encoder counts (send in inches)
+  public void driveWithEncoders(final double targetEncoderCounts) {
+    final double targetZoneLower = targetEncoderCounts - (targetEncoderCounts * 0.05);
+    final double targetZoneUpper = targetEncoderCounts + (targetEncoderCounts * 0.05);
+
+    // just measure one of the master motors and then run entire DT
+    if (m_rightMaster.getSelectedSensorPosition() < targetZoneLower) {
+      System.out.println("target encoder counts: " + targetEncoderCounts);
+      System.out.println("encoder: " + m_rightMaster.getSelectedSensorPosition());
+      this.autoDrive(0.2, 0);
+    } else if (m_rightMaster.getSelectedSensorPosition() > targetZoneUpper) {
+      System.out.println("target encoder counts: " + targetEncoderCounts);
+      this.autoDrive(-0.2, 0);
+    } else {
+      this.autoDrive(0, 0);
+    }
+  }
+
+  // returns true when done
+  public boolean doneDrivingEncoder(final double targetEncoderCounts) {
+    final double targetZoneLower = targetEncoderCounts - (targetEncoderCounts * DriveConstants.kDriveDistanceError);
+    final double targetZoneUpper = targetEncoderCounts + (targetEncoderCounts * DriveConstants.kDriveDistanceError);
+
+    if (m_rightMaster.getSelectedSensorPosition() <= targetZoneLower) {
+      return false;
+    } else if (m_rightMaster.getSelectedSensorPosition() >= targetZoneUpper) {
+      return false;
+    } else { 
+      return true;
+    }
+  }
+
+  // rotates robot using navx gyro
+  public void turnToAngle(final AHRS gyro, final double targetAngle, final double rotationSpeed) {
+    final double targetZoneLower = targetAngle - (DriveConstants.kTurnToAngleError);
+    final double targetZoneUpper = targetAngle + (DriveConstants.kTurnToAngleError);
+
+    if (gyro.getAngle() < targetZoneLower) {
+      this.autoDrive(0, rotationSpeed);
+    } else if (gyro.getAngle() > targetZoneUpper) {
+      this.autoDrive(0, -rotationSpeed);
+    } else {
+      this.autoDrive(0, 0);
+    }
+  }
+
+  // returns true when done
+  public boolean doneRotating(final AHRS gyro, final double targetAngle, final double rotationSpeed) {
+    final double targetZoneLower = targetAngle - (2.5);
+    final double targetZoneUpper = targetAngle + (2.5);
+
+    if (gyro.getAngle() < targetZoneLower) {
+      return false;
+    } else if (gyro.getAngle() > targetZoneUpper) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   // set neutral mode
-  public void setNeutralMode(NeutralMode neutralMode) {
+  public void setNeutralMode(final NeutralMode neutralMode) {
 		m_leftMaster.setNeutralMode(neutralMode);
 		m_leftSlave.setNeutralMode(neutralMode);
 		m_rightMaster.setNeutralMode(neutralMode);
 		m_rightSlave.setNeutralMode(neutralMode);
-	}
+  }
+  
+  // public WPI_TalonFX[] getMotors() {
+  //   return [m_leftMaster, m_leftSlave, m_rightMaster, m_rightSlave];
+  // }
 
-  public void updateDashboard(WPI_TalonFX talon, String talonName) {
+  public void updateDashboard(final WPI_TalonFX talon, final String talonName) {
     SmartDashboard.putNumber("Output % (" + talonName + ")", talon.getMotorOutputPercent());
     SmartDashboard.putNumber("Sensor Pos. (" + talonName + ")", talon.getSelectedSensorPosition());
     // SmartDashboard.putNumber("Sensor Vel. (" + talonName + ")", talon.getSelectedSensorVelocity());

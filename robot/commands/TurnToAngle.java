@@ -19,17 +19,18 @@ public class TurnToAngle extends CommandBase {
   private final double m_initialAngle;
   private final AHRS m_gyro;
   
-  // Forget perfection. For convinience, just use degrees. I give up.
   /*
+   * Forget perfection. For convinience, just use normal degrees. I give up.
    * Assume that command does not take into account direction of the robot.
    * For example, inputting 180 degrees into the command will literally make the robot make half a turn.
+   * RotateSpeed, on the other hand, is in ratio form (as used on all SpeedControllers)
   */
-  // RotateSpeed, on the other hand, is in ratio form (as used on all SpeedControllers)
+
   public TurnToAngle(Drivetrain dt, AHRS gyro, double rotationSpeed, double targetAngle) {
     m_drive = dt;
     m_rotationSpeed = rotationSpeed;
     m_gyro = gyro;
-    m_initialAngle = gyro.getAngle(); 
+    m_initialAngle = gyro.getAngle();
     m_targetAngle = m_initialAngle + targetAngle;
   }
 

@@ -7,17 +7,17 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-//import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.commands.Autonomous;
 import frc.robot.commands.LiftElevator;
-import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -39,6 +39,7 @@ public class RobotContainer {
     private final ColorWheelSystem m_colorSpinner = new ColorWheelSystem();
     private final HopperSystem m_hopper = new HopperSystem();
     private final IntakeSystem m_intake = new IntakeSystem();
+    // private final OrchestraSystem m_orchestra = new OrchestraSystem(new WPI_TalonFX(1), new WPI_TalonFX(2));
 
     // Define all controllers
     // driver: DT & related functions
@@ -109,13 +110,19 @@ public class RobotContainer {
     // SHOOTER SYSTEM
     new JoystickButton(m_driverController, OIConstants.b_shooter.value)
         .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM), m_shooter);
-    new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
-        .whileHeld(new ShooterCommand(m_shooter, m_visionSystem), false);
+    // new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
+    //     .whileHeld(new ShooterCommand(m_shooter, m_visionSystem), false);
 
     // VISION SYSTEM
     new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
         .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
         .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
+
+    // ORCHESTRA
+    // new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic).whenPressed(() -> m_orchestra);
+    // new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic).whenPressed(() -> m_orchestra);
+    // new JoystickButton(m_driverController, OIConstants.b_nextSong).whenPressed(() -> m_orchestra);
+    // new JoystickButton(m_driverController, OIConstants.b_prevSong).whenPressed(() -> m_orchestra);
   }
 
     // Autonomous

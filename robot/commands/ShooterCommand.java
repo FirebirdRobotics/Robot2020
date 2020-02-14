@@ -25,9 +25,9 @@ public class ShooterCommand extends CommandBase {
   /**
    * Creates a new ShooterCommand.
    */
-  public ShooterCommand(ShooterSystem shooter, VisionSystem vision) {
+  public ShooterCommand(ShooterSystem shooter, double distance) {
     m_shooter = shooter;
-    m_vision = vision;
+    distanceToTarget = distance;
     addRequirements(m_shooter, m_vision);
   }
 
@@ -35,24 +35,24 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void initialize() {
     // get distance to target
-    distanceToTarget = m_vision.rawDistanceToTarget();
+    //distanceToTarget = m_vision.rawDistanceToTarget();
 
     /*
      * get velocity required to get to target:
      * 
      * velocity = distance / (time * cos(angle of shooter))
      * 
-     * time = sqrt(2 * tangent(angle of shooter) * distance + height of shooter - height of target) / gravity
+     * time = sqrt(2 * (tangent(angle of shooter) * distance + height of shooter - height of target)) / gravity
      * 
      * velocity = distance / (whatever ^ this is * cos(angle of shooter))
      * 
      */
-    double velocity = (distanceToTarget / Math.cos(ShooterConstants.shooterAngle))
-        * Math.sqrt(PhysicsConstants.gAcceleration / (2 * Math.tan(ShooterConstants.shooterAngle) * distanceToTarget
-            + (ShooterConstants.shooterHeight - VisionConstants.kTargetHeight))) + EPSILON;
+    double velocity = (distanceToTarget / Math.cos(ShooterConstants.kShooterAngle))
+        * Math.sqrt(PhysicsConstants.gAcceleration / (2 * (Math.tan(ShooterConstants.kShooterAngle) * distanceToTarget
+            + (ShooterConstants.kShooterHeight - VisionConstants.kTargetHeight)))) + EPSILON;
 
     // convert velocity (in m/s) into unitless ratio
-    velocity /= (MotorConstants.kNeoRPM * 2.0 * Math.PI / (60)) * ShooterConstants.motorRadius;
+    velocity /= (MotorConstants.kNeoRPM * ShooterConstants.kGearRatio * 2.0 * Math.PI / (60)) * ShooterConstants.kMotorRadius;
 
     // don't run motor greater than max speed (on -1 to 1 ratio)
     if (velocity > 1)

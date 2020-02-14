@@ -12,7 +12,6 @@ import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.subsystems.HopperSystem;
 import frc.robot.subsystems.ShooterSystem;
-import frc.robot.subsystems.VisionSystem;
 
 public class HopperShooterCommand extends ShooterCommand {
 
@@ -23,8 +22,8 @@ public class HopperShooterCommand extends ShooterCommand {
   private final int m_numOfBalls;
   private int m_count = 0;
 
-  public HopperShooterCommand(ShooterSystem shooter, HopperSystem hopper, VisionSystem vision, int numOfBalls) {
-    super(shooter, vision);
+  public HopperShooterCommand(ShooterSystem shooter, HopperSystem hopper, int numOfBalls, double distance) {
+    super(shooter, distance);
     m_hopper = hopper;
     addRequirements(m_hopper);
 

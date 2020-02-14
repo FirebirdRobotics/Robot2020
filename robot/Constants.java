@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.util.Color;
  * <p>
  * It is advised to statically import this class (or one of its inner classes)
  * wherever the constants are needed, to reduce verbosity.
+ * 
+ * Every number is in inches or degrees unless otherwise stated.
  */
 public final class Constants {
 
@@ -52,6 +54,12 @@ public final class Constants {
 
         // VISIONSYSTEM
         public static final Button b_visionRoutineTape = Button.kA;
+
+        // ORCHESTRA
+        public static final Button b_nextSong = Button.kA;
+        public static final Button b_prevSong = Button.kA;
+        public static final Button b_togglePauseMusic = Button.kA;
+        public static final Button b_toggleStopMusic = Button.kA;
     }
 
     // Autonomous
@@ -60,13 +68,12 @@ public final class Constants {
         public static final double kDriveSpeed = 0.5;
         public static final double kTurnSpeed = 0.5;
         public static final double kWheelRadius = 2.5; // inches
-        public static final double kRobotRadius = 0;
-
+        
         // Time constants
         public static final double kWaitTime = 2.0; // seconds, time to wait for auto centering (limelight)
         public static final double kShooterWarmUpTime = 0.5; // seconds, time to wait for shooter to warm up
         public static final double kHopperWaitTime = 2.0; // seconds, time for one ball to pass from hopper to shooter        
-        public static final double kShooterWaitTime = 2.0; // seconds, time for one ball to shoot        
+        public static final double kShooterWaitTime = 2.0; // seconds, time for one ball to shoot 
     }
 
     // Drivetrain
@@ -83,13 +90,20 @@ public final class Constants {
 
         // Current limiting constants
         public static final boolean kCurrentLimitingEnabled = true; // True/False to enable/disable limit feature.
-        public static final int kPeakCurrentAmps = 38; // The "holding" current (amperes) to limit to when feature is activated.
+        public static final int kPeakCurrentAmps = 15; // The "holding" current (amperes) to limit to when feature is activated.
         public static final int kPeakTimeMs = 0; // How long current must exceed threshold (seconds) before limiting occurs.
         public static final int kContCurrentAmps = 10; // Current must exceed this threshold (amperes) before limiting occurs.
         public static final int kTimeoutMs = 30; // Amount of time (in milliseconds) to wait for a specified element to be found before an error is thrown
 
         // Deadband: makes sure controllers dont move motors if joystick is accidentally moved a small amount
         public static final double kDeadband = 0.05;
+
+        // Gear ratio (for every 8.4 rotations of the motor, the wheel spins once)
+        public static final double kGearRatio = 8.4;
+
+        // Error for DT functions
+        public static final double kDriveDistanceError = 0.05;
+        public static final double kTurnToAngleError = 2;
     }
 
     // Climbing
@@ -168,10 +182,13 @@ public final class Constants {
         // Solenoid port
         public static final int shooterHoodSolenoid = 4;
 
+        // Gear ratio
+        public static final double kGearRatio = 1.5;
+
         // Other constants
-        public static final double motorRadius = 0 * UnitConversionConstants.distanceConversionFactor;
-        public static final double shooterAngle = 0 * UnitConversionConstants.angleConversionFactor;
-        public static final double shooterHeight = 0 * UnitConversionConstants.distanceConversionFactor;
+        public static final double kMotorRadius = 0 * UnitConversionConstants.distanceConversionFactor;
+        public static final double kShooterAngle = 0 * UnitConversionConstants.angleConversionFactor;
+        public static final double kShooterHeight = 0 * UnitConversionConstants.distanceConversionFactor;
     }
 
     // LEDs
@@ -226,8 +243,12 @@ public final class Constants {
     }
 
     public static final class MotorConstants {
+        // NEO
         public static final double kNeoRPM = 5880; // max RPM of NEOs
+
+        // FALCON500s
         public static final double kFalconRPM = 6380; // max RPM of Falcon500s
+        public static final double kFalconCPM = 2048; // encoder counts per revolution
     }
 
     public static final class FieldConstants {
