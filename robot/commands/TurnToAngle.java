@@ -13,36 +13,49 @@ import frc.robot.subsystems.Drivetrain;
 
 public class TurnToAngle extends CommandBase {
 
-  private final Drivetrain m_drive;
-  private final double m_rotationSpeed;
-  private final double m_targetAngle;
-  private final double m_initialAngle;
-  private final AHRS m_gyro;
-  
-  /*
-   * Forget perfection. For convinience, just use normal degrees. I give up.
-   * Assume that command does not take into account direction of the robot.
-   * For example, inputting 180 degrees into the command will literally make the robot make half a turn.
-   * RotateSpeed, on the other hand, is in ratio form (as used on all SpeedControllers)
-  */
+  private Drivetrain m_drive;
+  private double m_rotationSpeed;
+  private double m_targetAngle;
+  private AHRS m_gyro;
 
+  private double targetZoneLower;
+  private double targetZoneUpper;
+
+  private boolean isFinished;
+  
+  // Angle needs to be in radians, as that is the superior unit mathematically speaking. (lol)
+  // RotateSpeed, on the other hand, is in ratio form (as used on all SpeedControllers)
   public TurnToAngle(Drivetrain dt, AHRS gyro, double rotationSpeed, double targetAngle) {
     m_drive = dt;
     m_rotationSpeed = rotationSpeed;
     m_gyro = gyro;
-    m_initialAngle = gyro.getAngle();
-    m_targetAngle = m_initialAngle + targetAngle;
+    m_targetAngle = targetAngle;
+    addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    targetZoneLower = m_targetAngle - (0.5);
+    targetZoneUpper = m_targetAngle + (0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.arcadeDrive(0, m_rotationSpeed);
+    // System.out.println("target angle: " + m_targetAngle);
+    // System.out.println("current angle: " + m_gyro.getAngle());
+  
+    if (m_gyro.getAngle() < targetZoneLower) {
+      m_drive.autoDrive(0, m_rotationSpeed);
+      isFinished = false;
+    } else if (m_gyro.getAngle() > targetZoneUpper) {
+      m_drive.autoDrive(0, -m_rotationSpeed);
+      isFinished = false;
+    } else {
+      m_drive.autoDrive(0, 0);
+      isFinished = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -53,6 +66,6 @@ public class TurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_gyro.getAngle() >= m_targetAngle);
+    return isFinished;
   }
 }

@@ -10,11 +10,22 @@ package frc.robot.commands;
 import frc.robot.subsystems.HopperSystem;
 import frc.robot.subsystems.ShooterSystem;
 import frc.robot.subsystems.VisionSystem;
+import frc.robot.subsystems.Drivetrain;
 
 public class AutoShooterCommand extends HopperShooterCommand {
 
+  private VisionSystem m_vision;
+  private Drivetrain m_drive;
+
   public AutoShooterCommand(ShooterSystem shooter, HopperSystem hopper, VisionSystem vision, int numOfBalls) {
     super(shooter, hopper, numOfBalls, vision.rawDistanceToTarget());
-    addRequirements(vision);
+    m_vision = vision;
+    addRequirements(m_vision);
+  }
+
+  @Override 
+  public void execute () {
+    m_vision.turnToTarget(m_drive);
+    super.execute();
   }
 }

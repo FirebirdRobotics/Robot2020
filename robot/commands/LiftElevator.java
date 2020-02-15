@@ -19,6 +19,7 @@ public class LiftElevator extends CommandBase {
   public LiftElevator(ClimbSystem climb, double position) {
     m_climb = climb;
     m_position = position;
+    addRequirements(m_climb);
   }
 
   // Called when the command is initially scheduled.

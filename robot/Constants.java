@@ -32,6 +32,10 @@ public final class Constants {
         public static final int driverXboxPort = 0;
         public static final int operatorXboxPort = 1; // unsure if this will be used as of now
 
+        // DRIVETRAIN
+        public static final Button b_moreSpeedy = Button.kA;
+        public static final Button b_lessSpeedy = Button.kA;
+
         // CLIMB SYSTEM
         public static final Button b_elevatorLow = Button.kA;
         public static final Button b_elevatorHigh = Button.kA;
@@ -193,7 +197,8 @@ public final class Constants {
 
     // LEDs
     public static final class LEDConstants {
-        public static final int revBlinkinPort = 12;
+        // PWM port for LED controller (rev blinkin)
+        public static final int revBlinkinPort = 0;
 
         // Rev Blinkin, page 14: http://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
         public static final double kRed = 0.61;
@@ -248,7 +253,7 @@ public final class Constants {
 
         // FALCON500s
         public static final double kFalconRPM = 6380; // max RPM of Falcon500s
-        public static final double kFalconCPM = 2048; // encoder counts per revolution
+        public static final double kFalconCPR = 2048; // encoder counts per revolution
     }
 
     public static final class FieldConstants {

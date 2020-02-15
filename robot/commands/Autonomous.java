@@ -24,7 +24,7 @@ public class Autonomous extends SequentialCommandGroup {
   public Autonomous(Drivetrain drivetrain, ShooterSystem shooter, VisionSystem vision, AHRS gyro, HopperSystem hopper) {
     addCommands(
       // new DriveDistance(24, AutonomousConstants.kDriveSpeed, drivetrain), // distance in inches
-      new RunCommand(() -> drivetrain.driveWithEncoders(24)),
+      new RunCommand(() -> drivetrain.driveWithEncoders(24), drivetrain),
       new TurnToAngle(drivetrain, gyro, AutonomousConstants.kTurnSpeed, 180),
       new ParallelCommandGroup(
         new RunCommand(() -> vision.visionRoutineTape(drivetrain), drivetrain),

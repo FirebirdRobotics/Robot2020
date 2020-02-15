@@ -7,12 +7,10 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
@@ -56,6 +54,8 @@ public class RobotContainer {
     // Create a sendable chooser for auto programs
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+    public double m_speedy = 0.2;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -64,10 +64,10 @@ public class RobotContainer {
         configureButtonBindings();
 
         // DRIVETRAIN
-        m_drivetrain.setDefaultCommand(
-            new RunCommand(() -> m_drivetrain.curvatureDrive(-m_driverController.getY(Hand.kLeft), 
-                m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
-            m_drivetrain));
+        m_drivetrain.setDefaultCommand(new RunCommand(
+                () -> m_drivetrain.curvatureDrive(-m_driverController.getY(Hand.kLeft),
+                        m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
+                m_drivetrain));
 
         // AUTONOMOUS
         m_chooser.setDefaultOption("Auto 1", m_autoCommand);
@@ -76,62 +76,74 @@ public class RobotContainer {
         SmartDashboard.putData("Autonomous", m_chooser);
     }
 
-  private void configureButtonBindings() {
-    /*
-     * We setup inline commands using Runnables instead of command files- This is
-     * because it's just overly verbose to create an entire file for it The only
-     * time we create command files is for elaborate autonomous programs
-     */
+    public AHRS getGyro() {
+        return m_gyro;
+    }
 
-    // CLIMB SYSTEM
-    new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
-        .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
-    new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
-        .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
-    new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
-        .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
-    new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)
-        .whileHeld(() -> m_climb.moveSkiLift(-ClimbConstants.kSkiLiftSpeed), m_climb);
+    public VisionSystem getVisionSystem() {
+        return m_visionSystem;
+    }
 
-    // COLORWHEEL SYSTEM
-    new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
-        .whileHeld(() -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed), m_colorSpinner);
+    private void configureButtonBindings() {
+        /*
+         * We setup inline commands using Runnables instead of command files- This is
+         * because it's just overly verbose to create an entire file for it The only
+         * time we create command files is for elaborate autonomous programs
+         */
 
-    // HOPPER SYSTEM
-    new JoystickButton(m_driverController, OIConstants.b_hopper.value)
-        .whileHeld(() -> m_hopper.runHopper(HopperConstants.kHopperSpeed), m_hopper);
-    new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
-        .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
+        // DRIVETRAIN (speed controls)
+        new JoystickButton(m_driverController, OIConstants.b_moreSpeedy.value).whenPressed(() -> m_speedy += 0.05);
+        new JoystickButton(m_driverController, OIConstants.b_lessSpeedy.value).whenPressed(() -> m_speedy -= 0.05);
 
-    // INTAKE SYSTEM
-    new JoystickButton(m_driverController, OIConstants.b_intake.value)
-        .whileHeld(() -> m_intake.runIntake(IntakeConstants.kIntakeSpeed), m_intake);
+        // CLIMB SYSTEM
+        new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
+                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
+        new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
+                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
+        new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
+                .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
+        new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)
+                .whileHeld(() -> m_climb.moveSkiLift(-ClimbConstants.kSkiLiftSpeed), m_climb);
 
-    // SHOOTER SYSTEM
-    new JoystickButton(m_driverController, OIConstants.b_shooter.value)
-        .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM), m_shooter);
-    // new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
-    //     .whileHeld(new ShooterCommand(m_shooter, m_visionSystem), false);
+        // COLORWHEEL SYSTEM
+        new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
+                .whileHeld(() -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed), m_colorSpinner);
 
-    // VISION SYSTEM
-    new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
-        .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
-        .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
+        // HOPPER SYSTEM
+        new JoystickButton(m_driverController, OIConstants.b_hopper.value)
+                .whileHeld(() -> m_hopper.runHopper(HopperConstants.kHopperSpeed), m_hopper);
+        new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
+                .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
 
-    // ORCHESTRA
-    new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)
-        .whenPressed(() -> m_orchestra.togglePauseMusic());
-    new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic.value)
-        .whenPressed(() -> m_orchestra.toggleStopMusic());
-    new JoystickButton(m_driverController, OIConstants.b_nextSong.value)
-        .whenPressed(() -> m_orchestra.nextSong());
-    new JoystickButton(m_driverController, OIConstants.b_prevSong.value)
-        .whenPressed(() -> m_orchestra.previousSong());
-  }
+        // INTAKE SYSTEM
+        new JoystickButton(m_driverController, OIConstants.b_intake.value)
+                .whileHeld(() -> m_intake.runIntake(IntakeConstants.kIntakeSpeed), m_intake);
+
+        // SHOOTER SYSTEM
+        new JoystickButton(m_driverController, OIConstants.b_shooter.value)
+                .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM), m_shooter);
+        // new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
+        // .whileHeld(new ShooterCommand(m_shooter, m_visionSystem), false);
+
+        // VISION SYSTEM
+        new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
+                .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
+                .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
+
+        // ORCHESTRA
+        new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)
+                .whenPressed(() -> m_orchestra.togglePauseMusic(), m_orchestra);
+        new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic.value)
+                .whenPressed(() -> m_orchestra.toggleStopMusic(), m_orchestra);
+        new JoystickButton(m_driverController, OIConstants.b_nextSong.value).whenPressed(() -> m_orchestra.nextSong(),
+                m_orchestra);
+        new JoystickButton(m_driverController, OIConstants.b_prevSong.value)
+                .whenPressed(() -> m_orchestra.previousSong(), m_orchestra);
+    }
 
     // Autonomous
     public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+        // An ExampleCommand will run in autonomous
         return m_chooser.getSelected();
     }
 }

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.MotorConstants;
 
 public class Drivetrain extends SubsystemBase {
   /**
@@ -147,34 +148,6 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  // rotates robot using navx gyro
-  public void turnToAngle(final AHRS gyro, final double targetAngle, final double rotationSpeed) {
-    final double targetZoneLower = targetAngle - (DriveConstants.kTurnToAngleError);
-    final double targetZoneUpper = targetAngle + (DriveConstants.kTurnToAngleError);
-
-    if (gyro.getAngle() < targetZoneLower) {
-      this.autoDrive(0, rotationSpeed);
-    } else if (gyro.getAngle() > targetZoneUpper) {
-      this.autoDrive(0, -rotationSpeed);
-    } else {
-      this.autoDrive(0, 0);
-    }
-  }
-
-  // returns true when done
-  public boolean doneRotating(final AHRS gyro, final double targetAngle, final double rotationSpeed) {
-    final double targetZoneLower = targetAngle - (2.5);
-    final double targetZoneUpper = targetAngle + (2.5);
-
-    if (gyro.getAngle() < targetZoneLower) {
-      return false;
-    } else if (gyro.getAngle() > targetZoneUpper) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   // set neutral mode
   public void setNeutralMode(final NeutralMode neutralMode) {
 		m_leftMaster.setNeutralMode(neutralMode);
@@ -187,6 +160,11 @@ public class Drivetrain extends SubsystemBase {
     WPI_TalonFX[] motors = {m_leftMaster, m_leftSlave, m_rightMaster, m_rightSlave};
 
     return motors;
+  }
+
+  // returns RPM
+  public double getVelocity() {
+    return (m_rightMaster.getSelectedSensorVelocity() * 10 * 60) / (MotorConstants.kFalconCPR);
   }
 
   public void updateDashboard(final WPI_TalonFX talon, final String talonName) {

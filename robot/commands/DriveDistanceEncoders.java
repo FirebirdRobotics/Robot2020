@@ -30,7 +30,7 @@ public class DriveDistanceEncoders extends CommandBase {
     m_rotations *= DriveConstants.kGearRatio;
 
     // multiply rotations by encoder counts per rotation
-    m_targetEncoderCounts = m_rotations * MotorConstants.kFalconCPM;
+    m_targetEncoderCounts = m_rotations * MotorConstants.kFalconCPR;
   }
 
   // Called when the command is initially scheduled.

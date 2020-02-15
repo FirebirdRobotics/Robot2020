@@ -33,6 +33,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_robotContainer.getGyro().reset();
+    m_robotContainer.getVisionSystem().setPipeline(1);
   }
 
   /**
@@ -56,6 +58,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    m_robotContainer.getVisionSystem().setPipeline(1);
   }
 
   @Override
@@ -68,6 +71,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    m_robotContainer.getGyro().reset();
+    m_robotContainer.getVisionSystem().setPipeline(1);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -88,6 +94,9 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    m_robotContainer.getGyro().reset();
+    m_robotContainer.getVisionSystem().setPipeline(1);
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -103,7 +112,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    System.out.println("test value: " + SmartDashboard.getNumber("test", 1));
+    // System.out.println("test value: " + SmartDashboard.getNumber("test", 1));
+    SmartDashboard.putNumber("m_speedy", m_robotContainer.m_speedy);
+
     VisionConstants.kpDistance = SmartDashboard.getNumber("Drive kP", 0);
     VisionConstants.kiDistance = SmartDashboard.getNumber("Drive kI", 0);
     VisionConstants.kdDistance = SmartDashboard.getNumber("Drive kD", 0);
@@ -113,6 +124,9 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.getGyro().reset();
+    m_robotContainer.getVisionSystem().setPipeline(1);
+
   }
 
   /**
@@ -120,5 +134,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    
   }
 }

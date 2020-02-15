@@ -39,6 +39,9 @@ public class VisionSystem extends SubsystemBase {
     m_limelight.getEntry("camMode").setNumber(0);
     m_limelight.getEntry("stream").setNumber(1);
 
+    // set the pipeline to vision tracking OFF (will turn on when centering command is on)
+    setPipeline(1);
+
     m_limelightHasValidTarget = false;
   }
 
@@ -80,6 +83,31 @@ public class VisionSystem extends SubsystemBase {
     m_driveAdjust = 0.0;
     m_steerAdjust = 0.0;
     m_drive.arcadeDrive(0.0, 0.0);
+    setPipeline(1);
+  }
+
+  public void turnToTarget(Drivetrain drivetrain) {
+    updateLimelightTracking();
+
+    double isNegative;
+    if (tx < 0) {
+      isNegative = -1;
+    } else {
+      isNegative = 1;
+    }
+
+    double txRatio = Math.abs(tx / 90);
+    txRatio += 0.1;
+    txRatio *= isNegative;
+
+    double m_rotationError = txRatio;
+    m_steerAdjust = m_rotationError;
+
+    if (m_limelightHasValidTarget) { // if limelight sees target
+      drivetrain.autoDrive(0, m_steerAdjust); // drive using command-tuned values
+    } else {
+      drivetrain.autoDrive(0.0, 0.0); // otherwise do nothing
+    }
   }
 
   public void updateVisionMeasurements() {
@@ -98,6 +126,9 @@ public class VisionSystem extends SubsystemBase {
     SmartDashboard.putNumber("Target Area", ta);
     SmartDashboard.putNumber("Closest Target (Area)", VisionConstants.closestTargetArea);
     SmartDashboard.putNumber("Closest Target (Distance)", VisionConstants.closestTargetDistance);
+
+    // set pipeline to vision processing
+    setPipeline(0);
 
     // using target area
     VisionConstants.closestTargetArea = getClosestTargetArea(VisionConstants.kTargetAreas, ta);
@@ -200,6 +231,10 @@ public class VisionSystem extends SubsystemBase {
   public double rawDistanceToTarget() {
     updateVisionMeasurements();
     return distanceToTarget(ty);
+  }
+
+  public void setPipeline(int pipeline) {
+    m_limelight.getEntry("pipeline").setNumber(pipeline);
   }
 
   @Override
