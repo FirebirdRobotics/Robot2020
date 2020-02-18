@@ -107,7 +107,6 @@ public final class Constants {
 
         // Error for DT functions
         public static final double kDriveDistanceError = 0.05;
-        public static final double kTurnToAngleError = 2;
     }
 
     // Climbing
