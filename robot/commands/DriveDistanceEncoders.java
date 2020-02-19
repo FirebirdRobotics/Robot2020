@@ -24,7 +24,7 @@ public class DriveDistanceEncoders extends CommandBase {
     addRequirements(m_drivetrain);
 
     // change target distance into number of rotations needed (distance / circumference of wheel)
-    m_rotations = targetDistance / (2 * Math.PI * AutonomousConstants.kWheelRadius);
+    m_rotations = targetDistance / (2 * Math.PI * DriveConstants.kWheelRadius);
 
     // multiply by gear ratio (8.4 rotations of motor per 1 rotation of wheel)
     m_rotations *= DriveConstants.kGearRatio;

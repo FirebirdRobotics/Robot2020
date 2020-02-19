@@ -7,9 +7,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Color;
 
 /**
@@ -71,13 +73,20 @@ public final class Constants {
         // Drivetrain in auto
         public static final double kDriveSpeed = 0.5;
         public static final double kTurnSpeed = 0.5;
-        public static final double kWheelRadius = 2.5; // inches
-        
+
         // Time constants
         public static final double kWaitTime = 2.0; // seconds, time to wait for auto centering (limelight)
         public static final double kShooterWarmUpTime = 0.5; // seconds, time to wait for shooter to warm up
         public static final double kHopperWaitTime = 2.0; // seconds, time for one ball to pass from hopper to shooter        
         public static final double kShooterWaitTime = 2.0; // seconds, time for one ball to shoot 
+
+        // Motion constants
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds (These are given as recommendation by WPILIB)
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
     }
 
     // Drivetrain
@@ -85,6 +94,9 @@ public final class Constants {
         // Speed constants
         public static final double kDriveSpeed = 0.50;
         public static final double kTurnSpeed = 0.50;
+
+        // Motor mode
+        public static final NeutralMode kMotorMode = NeutralMode.Brake;
 
         // TalonFX CAN ports
         public static final int dtFrontLeftPort = 1;
@@ -117,6 +129,17 @@ public final class Constants {
         // Other constants for TurnToAngle
         public static final double kTimePerLoop = 0.02;
         public static final double kAngleConversionFactor = 35; // used to convert a potentially huge error (b/c unit is angles) into a 1 to -1 ratio
+
+        // Physical measurements of DT
+        public static final double kWheelRadius = 2.5; // inches
+        public static final double kTrackWidth = 0.00; // MARK: put in meters
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
+
+        // Constants from the Robot Characterization Tool (don't change unless you re-run the tool) MARK: rerun the tool but put in wheel radius as meters
+        public static final double ksVolts = 0.22;
+        public static final double kvVoltSecondsPerMeter = 1.98;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+        public static final double kPDriveVel = 8.5;
     }
 
     // Climbing

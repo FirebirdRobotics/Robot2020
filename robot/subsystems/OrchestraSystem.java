@@ -15,6 +15,10 @@ import com.ctre.phoenix.music.Orchestra;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * This subsystem is literally just for memes
+ * Music goes into the deploy folder (as .chrp files)
+ */
 public class OrchestraSystem extends SubsystemBase {
  
   private Orchestra m_orchestra;
@@ -25,7 +29,7 @@ public class OrchestraSystem extends SubsystemBase {
   // ADD CHRP FILE NAMES HERE -- actual chirp files go in deploy
   private String[] m_songs = new String[] {
     "song1.chrp",
-    "song2.chrp"
+    "song2.chrp" // etc.
   };
 
   private ArrayList<TalonFX> m_instruments = new ArrayList<TalonFX>();

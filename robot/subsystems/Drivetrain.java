@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -14,11 +15,19 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorConstants;
+import frc.robot.Constants.UnitConversionConstants;
 
 public class Drivetrain extends SubsystemBase {
   /**
@@ -30,6 +39,10 @@ public class Drivetrain extends SubsystemBase {
   private final SupplyCurrentLimitConfiguration m_currentLimitConfig;
 
   private final DifferentialDrive m_diffDrive;
+
+  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
+  private final DifferentialDriveOdometry m_odometry;
 
   public Drivetrain() {
     m_leftMaster = new WPI_TalonFX(DriveConstants.dtFrontLeftPort);
@@ -63,13 +76,16 @@ public class Drivetrain extends SubsystemBase {
     m_rightSlave.setSensorPhase(false);
 
     // set mode of motors
-    setNeutralMode(NeutralMode.Coast);
+    setNeutralMode(DriveConstants.kMotorMode);
 
     // diffdrive assumes by default that right side must be negative- change to false for master/slave config
     m_diffDrive.setRightSideInverted(false); // DO NOT CHANGE THIS
 
     // deadband: motors wont move if speed of motors is within deadband
     m_diffDrive.setDeadband(DriveConstants.kDeadband);
+
+    resetEncoders();
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
 
   // ARCADE DRIVE = 1 STICK
@@ -96,6 +112,17 @@ public class Drivetrain extends SubsystemBase {
   public void autoDrive(final double forward, final double turn) {
     m_diffDrive.arcadeDrive(forward, turn, false);
   }
+
+  /**
+	 * Controls the left and right sides of the drive directly with voltages.
+	 *
+	 * @param leftVolts  the commanded left output
+	 * @param rightVolts the commanded right output
+	 */
+	public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_leftMaster.setVoltage(leftVolts);
+    m_rightMaster.setVoltage(rightVolts);
+	}
 
   public void configTalon(final WPI_TalonFX m_talon) {
     // factory reset hardware to make sure nothing unexpected
@@ -162,9 +189,137 @@ public class Drivetrain extends SubsystemBase {
     return motors;
   }
 
-  // returns RPM
-  public double getVelocity() {
-    return (m_rightMaster.getSelectedSensorVelocity() * 10 * 60) / (MotorConstants.kFalconCPR);
+  /**
+	 * Returns the heading of the robot in form required for odometry.
+	 *
+	 * @return the robot's heading in degrees, from 180 to 180 with positive value
+	 *         for left turn.
+	 */
+	public double getHeading() {
+		return m_gyro.getAngle();
+  }
+  
+  /**
+   * Zeroes the heading of the robot.
+   */
+  public void zeroHeading() {
+    m_gyro.reset();
+  }
+
+  /**
+	 * Returns left encoder position in meters
+	 * 
+	 * @return left encoder position (in meters)
+	 */
+	public double getLeftEncoderPosition() {
+    // get rotations of encoder by dividing encoder counts by counts per rotation
+    double encoderRotations = m_leftMaster.getSelectedSensorPosition() / MotorConstants.kFalconCPR;
+
+    // get rotations of wheel by diving rotations of encoder by gear ratio
+    double wheelRotations = encoderRotations / DriveConstants.kGearRatio;
+
+    // get distance by multiplying rotations of wheel by circumference of wheel (2 * pi * radius)
+    double distance = wheelRotations * (2 * Math.PI * (DriveConstants.kWheelRadius * UnitConversionConstants.distanceConversionFactor));
+
+		return distance;
+	}
+
+	/**
+	 * Returns right encoder position in meters
+	 * 
+	 * @return right encoder position (in meters)
+	 */
+	public double getRightEncoderPosition() {
+    // get rotations of encoder by dividing encoder counts by counts per rotation
+    double encoderRotations = m_rightMaster.getSelectedSensorPosition() / MotorConstants.kFalconCPR;
+
+    // get rotations of wheel by diving rotations of encoder by gear ratio
+    double wheelRotations = encoderRotations / DriveConstants.kGearRatio;
+
+    // get distance by multiplying rotations of wheel by circumference of wheel (2 * pi * radius)
+    double distance = wheelRotations * (2 * Math.PI * (DriveConstants.kWheelRadius * UnitConversionConstants.distanceConversionFactor));
+
+		return distance;
+  }
+
+  /**
+	 * Get the left encoder velocity in meters per second
+	 * 
+	 * @return Get the left encoder velocity (in m/s)
+	 */
+	public double getLeftEncoderRate() {
+    // get rotations of encoder by dividing encoder counts by counts per rotation
+    double encoderRotations = m_leftMaster.getSelectedSensorVelocity() / MotorConstants.kFalconCPR;
+
+    // get rotations of wheel by diving rotations of encoder by gear ratio
+    double wheelRotations = encoderRotations / DriveConstants.kGearRatio;
+
+    // get velocity by multiplying rotations of wheel by circumference of wheel (2 * pi * radius)
+    double velocity = wheelRotations * (2 * Math.PI * (DriveConstants.kWheelRadius * UnitConversionConstants.distanceConversionFactor));
+
+    // get distance per second by multiplying by 10; getSelectedSensorVelocity sends distance back per 100ms
+    velocity *= 10;
+
+		return velocity;
+	}
+
+	/**
+	 * Get the right encoder velocity in meters per second
+	 * 
+	 * @return Get the right encoder velocity (in m/s)
+	 */
+	public double getRightEncoderRate() {
+		// get rotations of encoder by dividing encoder counts by counts per rotation
+    double encoderRotations = m_rightMaster.getSelectedSensorVelocity() / MotorConstants.kFalconCPR;
+
+    // get rotations of wheel by diving rotations of encoder by gear ratio
+    double wheelRotations = encoderRotations / DriveConstants.kGearRatio;
+
+    // get velocity by multiplying rotations of wheel by circumference of wheel (2 * pi * radius)
+    double velocity = wheelRotations * (2 * Math.PI * (DriveConstants.kWheelRadius * UnitConversionConstants.distanceConversionFactor));
+
+    // get distance per second by multiplying by 10; getSelectedSensorVelocity sends distance back per 100ms
+    velocity *= 10;
+
+    return velocity;
+	}
+  
+  /**
+   * Returns the current wheel speeds of the robot.
+   *
+   * @return The current wheel speeds.
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(getLeftEncoderRate(), getRightEncoderRate()); // we are sending in meters/second
+  }
+
+  /**
+   * Gets the average distance of the two encoders.
+   *
+   * @return the average of the two encoder readings
+   */
+  public double getAverageEncoderDistance() {
+    return (getLeftEncoderPosition() + getRightEncoderPosition()) / 2.0;
+  }
+
+  /**
+   * Returns the currently-estimated pose of the robot.
+   *
+   * @return The pose.
+   */
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
+  /**
+   * Resets the odometry to the specified pose.
+   *
+   * @param pose The pose to which to set the odometry.
+   */
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_gyro.reset();
+    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
   public void updateDashboard(final WPI_TalonFX talon, final String talonName) {
@@ -175,6 +330,8 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+
+    // Update the odometry in the periodic block
+		m_odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderPosition(), getRightEncoderPosition());
   }
 }
