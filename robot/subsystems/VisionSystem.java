@@ -25,7 +25,8 @@ public class VisionSystem extends SubsystemBase {
   private final NetworkTable m_limelight;
   private boolean m_limelightHasValidTarget;
   private double tv, tx, ty, ta;
-  private double error, integralError, derivativeError, previousError;
+  private double driveError, driveIntegralError, driveDerivativeError, drivePreviousError;
+  private double turnError, turnIntegralError, turnDerivativeError, turnPreviousError;
 
   private double m_steerAdjust; // amount to rotate drivetrain
   private double m_driveAdjust; // amount to drive drivetrain
@@ -52,15 +53,16 @@ public class VisionSystem extends SubsystemBase {
     double m_rotationError = tx * VisionConstants.kpRotation + VisionConstants.kConstantForce;
     m_steerAdjust = m_rotationError;
 
-    // calculate PID stuff
-    error = VisionConstants.closestTargetArea - ta; // error = target - actual
-    integralError += error * VisionConstants.kTimePerLoop; // integral increased by error * time (0.02 seconds per loop)
-    derivativeError = (error - previousError) / .02; // derivative = change in error / time (0.02 seconds per loop)
+    // calculate PID error for forward/backward motion
+    driveError = VisionConstants.closestTargetArea - ta; // error = target - actual
+    driveIntegralError += driveError * VisionConstants.kTimePerLoop; // integral increased by error * time (0.02 seconds per loop)
+    driveDerivativeError = (driveError - drivePreviousError) / VisionConstants.kTimePerLoop; // derivative = change in error / time (0.02 seconds per loop)
+    drivePreviousError = driveError; // update previousError to current error
 
-    // try to drive forward until the target area reaches our desired area
-    double m_distanceError = (error * VisionConstants.kpDistance) + (integralError * VisionConstants.kiDistance)
-        + (derivativeError * VisionConstants.kdDistance) + VisionConstants.kConstantForce;
-
+    // drive forward/backward until we reach our desired distance
+    double m_distanceError = (driveError * VisionConstants.kpDistance) + (driveIntegralError * VisionConstants.kiDistance) 
+        + (driveDerivativeError * VisionConstants.kdDistance) + VisionConstants.kConstantForce;
+    
     // don't let the robot drive too fast into the goal
     if (m_distanceError > VisionConstants.kMaxDrive) {
       m_distanceError = VisionConstants.kMaxDrive;
@@ -69,8 +71,6 @@ public class VisionSystem extends SubsystemBase {
     }
 
     m_driveAdjust = m_distanceError;
-
-    previousError = error; // update previousError to current error
 
     if (m_limelightHasValidTarget) { // if limelight sees target
       drivetrain.arcadeDrive(m_driveAdjust, m_steerAdjust); // drive using command-tuned values
@@ -214,12 +214,12 @@ public class VisionSystem extends SubsystemBase {
      * 
      * tangent = opposite / adjacent tan(a1+a2) = (h2-h1) / d
      * 
-     * where: a1 = angle the camera is mounted at (probably somewhere between
-     * 0-90deg) a2 = angle of the camera to the target (its the "ty" value output by
-     * limelight) h2 = height of the target h1 = height of the camera
+     * where: a1 = angle the camera is mounted at (probably somewhere between 0-90deg) 
+     * a2 = angle of the camera to the target (its the "ty" value output by limelight) 
+     * h2 = height of the target h1 = height of the camera
      * 
-     * distance of camera to target = height from camera to target / angle of camera
-     * to target d = (h2-h1) / tan(a1+a2)
+     * distance of camera to target = height from camera to target / angle of camera to target 
+     * d = (h2-h1) / tan(a1+a2)
      */
 
     // the only thing that changes in this equation is targetAngle, which is ty in
