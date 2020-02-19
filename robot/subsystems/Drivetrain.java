@@ -118,8 +118,8 @@ public class Drivetrain extends SubsystemBase {
 
   // autonomously drive using encoder counts (send in inches)
   public void driveWithEncoders(final double targetEncoderCounts) {
-    final double targetZoneLower = targetEncoderCounts - (targetEncoderCounts * 0.05);
-    final double targetZoneUpper = targetEncoderCounts + (targetEncoderCounts * 0.05);
+    final double targetZoneLower = targetEncoderCounts - (targetEncoderCounts * DriveConstants.kDriveDistanceError);
+    final double targetZoneUpper = targetEncoderCounts + (targetEncoderCounts * DriveConstants.kDriveDistanceError);
 
     // just measure one of the master motors and then run entire DT
     if (m_rightMaster.getSelectedSensorPosition() < targetZoneLower) {

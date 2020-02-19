@@ -105,8 +105,18 @@ public final class Constants {
         // Gear ratio (for every 8.4 rotations of the motor, the wheel spins once)
         public static final double kGearRatio = 8.4;
 
-        // Error for DT functions
+        // Error for drive distance commands
         public static final double kDriveDistanceError = 0.05;
+
+        // PID for TurnToAngle
+        public static final double kP = 0.088; // CHANGE THIS
+        public static final double kI = 0.014; // CHANGE THIS
+        public static final double kD = 0.020; // CHANGE THIS
+        public static final double kF = 0.012; // CHANGE THIS
+
+        // Other constants for TurnToAngle
+        public static final double kTimePerLoop = 0.02;
+        public static final int angleConversionFactor = 35; // used to convert a potentially huge error (b/c unit is angles) into a 1 to -1 ratio
     }
 
     // Climbing
