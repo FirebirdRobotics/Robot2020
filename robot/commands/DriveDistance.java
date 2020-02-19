@@ -9,7 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.AutonomousConstants;
+// import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.Drivetrain;
 
@@ -28,7 +29,7 @@ public class DriveDistance extends CommandBase {
     //epsilon = -4.17 * m_velocity + 2.341;
     // if (velocity < -1) velocity = -1;
     // if (velocity > 1) velocity = 1;
-    m_time = ((m_distance * gearRatio * 60) / ((m_velocity * MotorConstants.kFalconRPM) * ((2 * Math.PI)) * AutonomousConstants.kWheelRadius));
+    m_time = ((m_distance * gearRatio * 60) / ((m_velocity * MotorConstants.kFalconRPM) * ((2 * Math.PI)) * DriveConstants.kWheelRadius));
     
     //System.out.println("calculation: " + m_time);
     m_drive = dt;

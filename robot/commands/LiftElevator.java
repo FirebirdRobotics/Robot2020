@@ -23,7 +23,7 @@ public class LiftElevator extends CommandBase {
   }
 
   // Called when the command is initially scheduled.
-  @Override
+ @Override
   public void initialize() {
   }
 

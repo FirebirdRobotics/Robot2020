@@ -7,11 +7,18 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.ColorMatch;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.util.Color;
 
 /**
@@ -297,5 +304,22 @@ public final class Constants {
         public static final double kInitiationLineToTrench = 80.0;
         public static final double kTargetHeight = 98.25;
         public static final double kOuterToInnerTarget = 29.25;
+    }
+
+    public static final class PathWeaver {
+        /**
+         * Gets the wanted path for the robot to follow
+         * @param path The name of the trajectory's .json file; DO NOT INCLUDE the '.wpilib.json' file extension
+         * @return The path for the robot to follow, as a Trajectory object
+         */
+        public static Trajectory getTrajectory(String path) {
+            try {
+                Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("/home/lvuser/deploy/" + path + ".wpilib.json");
+                return TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+            } catch (IOException ex) {
+                DriverStation.reportError("Unable to open trajectory: " + path, ex.getStackTrace());
+                return null;
+            }
+        }
     }
 }

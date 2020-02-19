@@ -25,13 +25,13 @@ public class IntakeSystem extends SubsystemBase {
 
   }
 
-  public void runIntake(double speed) {
+  public void setIntake(double speed) {
     m_intakeMotor.set(speed);
   }
 
   // no idea what this function requires right now, hopefully its pneumatic
   public void retractIntake() {
-
+    m_intakeSolenoid.set(!m_intakeSolenoid.get());
   }
 
   @Override

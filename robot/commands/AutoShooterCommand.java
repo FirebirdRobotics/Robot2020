@@ -24,7 +24,7 @@ public class AutoShooterCommand extends HopperShooterCommand {
   }
 
   @Override 
-  public void execute () {
+  public void execute() {
     m_vision.turnToTarget(m_drive);
     super.execute();
   }

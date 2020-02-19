@@ -13,8 +13,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import frc.robot.Constants.*;
 import frc.robot.commands.Autonomous;
+import frc.robot.commands.LiftElevator;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -47,8 +49,40 @@ public class RobotContainer {
     // Create gyro object
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-    // Define all Commands
-    private final Autonomous m_autoCommand = new Autonomous(m_drivetrain, m_shooter, m_visionSystem, m_gyro, m_hopper);
+    // Array of Autonomous Paths (from PathWeaver)
+    private Trajectory[] m_paths = new Trajectory[] { 
+                PathWeaver.getTrajectory(""), // 1
+                PathWeaver.getTrajectory(""), // 2
+                PathWeaver.getTrajectory(""), // 3
+                PathWeaver.getTrajectory(""), // 4
+                PathWeaver.getTrajectory(""), // 5
+                PathWeaver.getTrajectory(""), // 6
+                PathWeaver.getTrajectory(""), // 7
+                PathWeaver.getTrajectory(""), // 8
+                PathWeaver.getTrajectory(""), // 9
+                PathWeaver.getTrajectory(""), // 10
+                PathWeaver.getTrajectory("")  // 11
+        };
+        
+    // Create Command for Autonomous
+    private final Autonomous m_enemyTrench = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper,
+                                                                m_paths[0],
+                                                                m_paths[1],
+                                                                m_paths[2],
+                                                                m_paths[3]
+                                                        );
+    private final Autonomous m_middle = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper,
+                                                                m_paths[4],
+                                                                m_paths[5],
+                                                                m_paths[6],
+                                                                m_paths[7]
+                                                        );
+    private final Autonomous m_allyTrench = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper,
+                                                                m_paths[8],
+                                                                m_paths[9],
+                                                                m_paths[10],
+                                                                m_paths[11]
+                                                        );
 
     // Create a sendable chooser for auto programs
     SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -69,8 +103,9 @@ public class RobotContainer {
                 m_drivetrain));
 
         // AUTONOMOUS
-        m_chooser.setDefaultOption("Auto 1", m_autoCommand);
-        // m_chooser.addOption(name, object);
+        m_chooser.setDefaultOption("Enemy Trench", m_enemyTrench);
+        m_chooser.setDefaultOption("Middle", m_middle);
+        m_chooser.setDefaultOption("Ally Trench", m_allyTrench);
 
         SmartDashboard.putData("Autonomous", m_chooser);
     }
@@ -96,9 +131,9 @@ public class RobotContainer {
 
         // CLIMB SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
-                .whenPressed(() -> m_climb.setElevatorPosition(ClimbConstants.kElevatorLowPosition), m_climb);
+                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
         new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
-                .whenPressed(() -> m_climb.setElevatorPosition(ClimbConstants.kElevatorHighPosition), m_climb);
+                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
         new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
                 .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
         new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)
@@ -116,7 +151,7 @@ public class RobotContainer {
 
         // INTAKE SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_intake.value)
-                .whileHeld(() -> m_intake.runIntake(IntakeConstants.kIntakeSpeed), m_intake);
+                .whileHeld(() -> m_intake.setIntake(IntakeConstants.kIntakeSpeed), m_intake);
 
         // SHOOTER SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_shooter.value)
@@ -142,7 +177,7 @@ public class RobotContainer {
 
     // Autonomous
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
+        // Chosen command will run
         return m_chooser.getSelected();
     }
 }

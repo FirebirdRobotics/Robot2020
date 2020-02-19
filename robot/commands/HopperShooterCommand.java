@@ -13,6 +13,10 @@ import frc.robot.Constants.HopperConstants;
 import frc.robot.subsystems.HopperSystem;
 import frc.robot.subsystems.ShooterSystem;
 
+/**
+ * Runs the shooter along with the hopper, so that the hopper pushes balls into the shooter at certain intervals.
+ */
+
 public class HopperShooterCommand extends ShooterCommand {
 
   private final HopperSystem m_hopper;
@@ -23,6 +27,7 @@ public class HopperShooterCommand extends ShooterCommand {
   private int m_count = 0;
 
   public HopperShooterCommand(ShooterSystem shooter, HopperSystem hopper, int numOfBalls, double distance) {
+    // Calls the constructor
     super(shooter, distance);
     m_hopper = hopper;
     addRequirements(m_hopper);
