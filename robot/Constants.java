@@ -112,11 +112,11 @@ public final class Constants {
         public static final double kP = 0.088; // CHANGE THIS
         public static final double kI = 0.014; // CHANGE THIS
         public static final double kD = 0.020; // CHANGE THIS
-        public static final double kF = 0.012; // CHANGE THIS
+        public static final double kMinimumSpeed = 0.012; // CHANGE THIS
 
         // Other constants for TurnToAngle
         public static final double kTimePerLoop = 0.02;
-        public static final int angleConversionFactor = 35; // used to convert a potentially huge error (b/c unit is angles) into a 1 to -1 ratio
+        public static final double kAngleConversionFactor = 35; // used to convert a potentially huge error (b/c unit is angles) into a 1 to -1 ratio
     }
 
     // Climbing
@@ -219,6 +219,8 @@ public final class Constants {
     public static final class VisionConstants {
         // PID Constants (turn)
         public static final double kpRotation = 0.20; // proportional
+        public static final double kiRotation = 0.00; // integral
+        public static final double kdRotation = 0.00; // derivative
 
         // PID Constants (drive)
         public static double kpDistance = 0.70; // proportional

@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.commands.Autonomous;
-import frc.robot.commands.LiftElevator;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -97,9 +96,9 @@ public class RobotContainer {
 
         // CLIMB SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
-                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
+                .whenPressed(() -> m_climb.setElevatorPosition(ClimbConstants.kElevatorLowPosition), m_climb);
         new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
-                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
+                .whenPressed(() -> m_climb.setElevatorPosition(ClimbConstants.kElevatorHighPosition), m_climb);
         new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
                 .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
         new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)

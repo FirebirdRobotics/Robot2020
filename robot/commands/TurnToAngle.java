@@ -48,21 +48,34 @@ public class TurnToAngle extends CommandBase {
     // System.out.println("target angle: " + m_targetAngle);
     // System.out.println("current angle: " + m_gyro.getAngle());
 
+    // if angle is negative, make positive; then round to nearest whole angle
     m_currentAngle = Math.abs(Math.round(m_gyro.getAngle()));
 
     // CALCULATE ERROR
-    m_error = m_targetAngle - m_currentAngle;
+    m_error = m_targetAngle - m_currentAngle; // if error is positive, then OK; if error negative, we needa do some changes
     m_integralError += m_error * DriveConstants.kTimePerLoop;
-    m_derivativeError = m_previousError - m_error;
+    m_derivativeError = (m_previousError - m_error) / DriveConstants.kTimePerLoop;
+    m_previousError = m_error;
 
     // CALCULATE SPEED USING PID
-    m_rotationSpeed = (m_error * DriveConstants.kP) + (m_integralError * DriveConstants.kI) + (m_derivativeError * DriveConstants.kD) + DriveConstants.kF;
-    m_rotationSpeed /= 35;
+    m_rotationSpeed = (m_error * DriveConstants.kP) + (m_integralError * DriveConstants.kI) + (m_derivativeError * DriveConstants.kD); // PID
+    m_rotationSpeed /= 35; // divide by this factor to convert angles into a usable speed ratio (no actual math involved, just a constant)
+    m_rotationSpeed += DriveConstants.kMinimumSpeed; // minimum speed for robot to turn at
 
-    if (m_currentAngle < m_targetAngle) {
+    if (m_currentAngle < m_targetAngle) { // if error is positive value
+      
+
       // drive using calculated PID
       m_drive.autoDrive(0, m_rotationSpeed);
       isFinished = false;
+
+    } else if (m_currentAngle > m_targetAngle) { // if error is negative value
+
+
+      // drive using calculated PID
+      m_drive.autoDrive(0, m_rotationSpeed);
+      isFinished = false;
+
     } else {
       m_drive.autoDrive(0, 0);
       isFinished = true;
@@ -72,6 +85,7 @@ public class TurnToAngle extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    // reset all variables after command is done
     m_error = 0;
     m_integralError = 0;
     m_derivativeError = 0;
