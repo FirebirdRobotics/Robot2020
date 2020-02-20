@@ -87,7 +87,9 @@ public class RobotContainer {
     // Create a sendable chooser for auto programs
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-    public double m_speedy = 0.2;
+    // Variables for customizing the robot while it is live
+    public double m_speedy = 0.2; // adds/subtracts speed from robot
+    public int m_swappy = 1; // changes which direction is front of robot
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -98,8 +100,8 @@ public class RobotContainer {
 
         // DRIVETRAIN
         m_drivetrain.setDefaultCommand(new RunCommand(
-                () -> m_drivetrain.curvatureDrive(-m_driverController.getY(Hand.kLeft),
-                        m_driverController.getX(Hand.kRight), m_driverController.getBumper(Hand.kRight)),
+                () -> m_drivetrain.curvatureDrive(-m_driverController.getY(Hand.kLeft) * m_speedy * m_swappy,
+                        m_driverController.getX(Hand.kRight) * m_speedy * m_swappy, m_driverController.getBumper(Hand.kRight)),
                 m_drivetrain));
 
         // AUTONOMOUS
@@ -125,9 +127,10 @@ public class RobotContainer {
          * time we create command files is for elaborate autonomous programs
          */
 
-        // DRIVETRAIN (speed controls)
+        // DRIVETRAIN (live controls)
         new JoystickButton(m_driverController, OIConstants.b_moreSpeedy.value).whenPressed(() -> m_speedy += 0.05);
         new JoystickButton(m_driverController, OIConstants.b_lessSpeedy.value).whenPressed(() -> m_speedy -= 0.05);
+        new JoystickButton(m_driverController, OIConstants.b_swappy.value).whenPressed(() -> m_swappy = m_drivetrain.invertDrivetrain(m_swappy), m_drivetrain);
 
         // CLIMB SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)

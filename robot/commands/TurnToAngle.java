@@ -25,8 +25,7 @@ public class TurnToAngle extends CommandBase {
 
   private boolean isFinished;
 
-  // Angle needs to be in radians, as that is the superior unit mathematically
-  // speaking. (lol)
+  // Angle needs to be in in degrees.
   // RotateSpeed, on the other hand, is in ratio form (as used on all
   // SpeedControllers)
   public TurnToAngle(final Drivetrain dt, final AHRS gyro, final double rotationSpeed, final double targetAngle) {
@@ -40,6 +39,8 @@ public class TurnToAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_integralError = 0;
+    m_previousError = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,28 +50,27 @@ public class TurnToAngle extends CommandBase {
     // System.out.println("current angle: " + m_gyro.getAngle());
 
     // if angle is negative, make positive; then round to nearest whole angle
-    m_currentAngle = Math.abs(Math.round(m_gyro.getAngle()));
+    m_currentAngle = Math.round(m_gyro.getAngle());
 
     // CALCULATE ERROR
     m_error = m_targetAngle - m_currentAngle; // if error is positive, then OK; if error negative, we needa do some changes
     m_integralError += m_error * DriveConstants.kTimePerLoop;
-    m_derivativeError = (m_previousError - m_error) / DriveConstants.kTimePerLoop;
+    m_derivativeError = (m_error - m_previousError) / DriveConstants.kTimePerLoop;
     m_previousError = m_error;
 
     // CALCULATE SPEED USING PID
     m_rotationSpeed = (m_error * DriveConstants.kP) + (m_integralError * DriveConstants.kI) + (m_derivativeError * DriveConstants.kD); // PID
     m_rotationSpeed /= 35; // divide by this factor to convert angles into a usable speed ratio (no actual math involved, just a constant)
-    m_rotationSpeed += DriveConstants.kMinimumSpeed; // minimum speed for robot to turn at
+     // minimum speed for robot to turn at
 
     if (m_currentAngle < m_targetAngle) { // if error is positive value
-
-
       // drive using calculated PID
+      m_rotationSpeed += DriveConstants.kMinimumSpeed;
       m_drive.autoDrive(0, m_rotationSpeed);
       isFinished = false;
     } else if (m_currentAngle > m_targetAngle) { // if error is negative value
-
       // drive using calculated PID
+      m_rotationSpeed -= DriveConstants.kMinimumSpeed;
       m_drive.autoDrive(0, m_rotationSpeed);
       isFinished = false;
     } else {

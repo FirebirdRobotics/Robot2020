@@ -44,6 +44,7 @@ public final class Constants {
         // DRIVETRAIN
         public static final Button b_moreSpeedy = Button.kA;
         public static final Button b_lessSpeedy = Button.kA;
+        public static final Button b_swappy = Button.kA;
 
         // CLIMB SYSTEM
         public static final Button b_elevatorLow = Button.kA;
@@ -139,10 +140,10 @@ public final class Constants {
 
         // Physical measurements of DT
         public static final double kWheelRadius = 2.5; // inches
-        public static final double kTrackWidth = 0.00; // MARK: put in meters
+        public static final double kTrackWidth = 0.00; // meters
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
-        // Constants from the Robot Characterization Tool (don't change unless you re-run the tool) MARK: rerun the tool but put in wheel radius as meters
+        // Constants from the Robot Characterization Tool (don't change unless you re-run the tool)
         public static final double ksVolts = 0.22;
         public static final double kvVoltSecondsPerMeter = 1.98;
         public static final double kaVoltSecondsSquaredPerMeter = 0.2;
@@ -162,6 +163,19 @@ public final class Constants {
         // Encoder counts
         public static final double kElevatorLowPosition = 0;
         public static final double kElevatorHighPosition = 5000;
+
+        // Smart Motion control constants
+        public static final double kP = 0; // proportional constant
+        public static final double kI = 0; // integral constant
+        public static final double kD = 0; // derivative constant
+        public static final double kIZ = 0; // integral zone: zone in which error must be in for integral to take effect
+        public static final double kFF = 0; // feedforward constant
+        public static final double kMaxOutput = 1.0;
+        public static final double kMinOutput = -1.0;
+        public static final double kMaxVel = 0; // maximum velocity, in RPM
+        public static final double kMinVel = 0; // minimum velocity, in RPM
+        public static final double kMaxAccel = 0; // maximum acceleration
+        public static final double kAllowedError = 0; // maximum
     }
 
     // Color wheel

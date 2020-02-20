@@ -13,9 +13,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.MotorConstants;
 
 public class ShooterSystem extends PIDSubsystem {
-
   private final CANSparkMax m_topMotor, m_bottomMotor;
   private double m_topMotorSpeed, m_bottomMotorSpeed;
 
@@ -79,6 +79,6 @@ public class ShooterSystem extends PIDSubsystem {
 
   @Override
   protected double getMeasurement() {
-    return m_topMotor.getEncoder().getVelocity();
+    return m_topMotor.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
   }
 }

@@ -189,6 +189,16 @@ public class Drivetrain extends SubsystemBase {
     return motors;
   }
 
+  public int invertDrivetrain(int isInverted) {
+    if (isInverted == 1) {
+      return -1;
+    } else if (isInverted == -1) {
+      return 1;
+    } else {
+      return 1;
+    }
+  }
+
   /**
 	 * Returns the heading of the robot in form required for odometry.
 	 *
@@ -325,6 +335,15 @@ public class Drivetrain extends SubsystemBase {
   public void updateDashboard(final WPI_TalonFX talon, final String talonName) {
     SmartDashboard.putNumber("Output % (" + talonName + ")", talon.getMotorOutputPercent());
     SmartDashboard.putNumber("Sensor Pos. (" + talonName + ")", talon.getSelectedSensorPosition());
+  }
+
+  // Returns in a ratio unit depending on the motor's max RPM.
+  public double getVelocity () {
+    return ((m_rightMaster.getSelectedSensorVelocity() + m_leftMaster.getSelectedSensorVelocity()) * 5 / (MotorConstants.kFalconCPR * MotorConstants.kFalconRPM));
+  }
+
+  public double getRightEncoderPosition2 () {
+    return m_rightMaster.getSelectedSensorPosition();
   }
 
   @Override
