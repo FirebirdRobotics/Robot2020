@@ -130,6 +130,8 @@ public class RobotContainer {
         // DRIVETRAIN (live controls)
         new JoystickButton(m_driverController, OIConstants.b_moreSpeedy.value).whenPressed(() -> m_speedy += 0.05);
         new JoystickButton(m_driverController, OIConstants.b_lessSpeedy.value).whenPressed(() -> m_speedy -= 0.05);
+        // invertDriveTrain() is a useless method unless the entire drive subsystem is inverted
+        // Either change m_swappy to a boolean and invert the entire driveTrain (with an int variable) or remove invert method.
         new JoystickButton(m_driverController, OIConstants.b_swappy.value).whenPressed(() -> m_swappy = m_drivetrain.invertDrivetrain(m_swappy), m_drivetrain);
 
         // CLIMB SYSTEM
