@@ -61,7 +61,7 @@ public class OrchestraSystem extends SubsystemBase {
     m_orchestra.loadMusic(m_songs[m_songSelection]); 
 
     /* print to console */
-    System.out.println("Current song: " + m_songs[m_songSelection]);
+    SmartDashboard.putString("Current song", m_songs[m_songSelection].toString());
     
     /* schedule a play request, after a delay.  
         This gives the Orchestra service time to parse chirp file.
@@ -72,20 +72,20 @@ public class OrchestraSystem extends SubsystemBase {
   public void togglePauseMusic() {
     if (m_orchestra.isPlaying()) {
       m_orchestra.pause();
-      System.out.println("Song paused.");
+      SmartDashboard.putString("Song", "Paused");
     }  else {
       m_orchestra.play();
-      System.out.println("Playing song...");
+      SmartDashboard.putString("Song", "Playing");
     }
   }
 
   public void toggleStopMusic() {
     if (m_orchestra.isPlaying()) {
       m_orchestra.stop();
-      System.out.println("Song stopped.");
+      SmartDashboard.putString("Song", "Stopped");
     }  else {
       m_orchestra.play();
-      System.out.println("Playing song...");
+      SmartDashboard.putString("Song", "Playing");
     }
   }
 
