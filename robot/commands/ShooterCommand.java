@@ -20,6 +20,7 @@ public class ShooterCommand extends CommandBase {
   private ShooterSystem m_shooter;
   private VisionSystem m_vision;
   private double distanceToTarget;
+  private boolean triggerFinished = false;
   private final double EPSILON = 0.01; // all error unaccounted for
 
   /**
@@ -72,6 +73,8 @@ public class ShooterCommand extends CommandBase {
   public void execute() {
     // Starts PID loop.
     m_shooter.enable();
+    SmartDashboard.putNumber("Current Speed", m_shooter.getSpeed()*MotorConstants.kNeoRPM);
+    SmartDashboard.putNumber("Shooter spin ratio", m_shooter.getSpeed() / m_velocity);
     // SmartDashboard.putNumber("Shooter Test", 0);
   }
 
@@ -85,6 +88,10 @@ public class ShooterCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return triggerFinished;
+  }
+
+  public void triggerFinished () {
+    triggerFinished = true;
   }
 }
