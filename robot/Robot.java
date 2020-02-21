@@ -100,11 +100,16 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
+    SmartDashboard.putNumber("Shooter Speed", 0)
+    
 
+    /*
     SmartDashboard.putNumber("test", 0);
     SmartDashboard.putNumber("Drive kP", 0);
     SmartDashboard.putNumber("Drive kI", 0);
     SmartDashboard.putNumber("Drive kD", 0);
+    */
   }
 
   /**
@@ -115,9 +120,11 @@ public class Robot extends TimedRobot {
     // System.out.println("test value: " + SmartDashboard.getNumber("test", 1));
     SmartDashboard.putNumber("m_speedy", m_robotContainer.m_speedy);
 
+    /*
     VisionConstants.kpDistance = SmartDashboard.getNumber("Drive kP", 0);
     VisionConstants.kiDistance = SmartDashboard.getNumber("Drive kI", 0);
     VisionConstants.kdDistance = SmartDashboard.getNumber("Drive kD", 0);
+    */
   }
 
   @Override
