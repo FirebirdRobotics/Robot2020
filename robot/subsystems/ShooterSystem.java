@@ -69,4 +69,8 @@ public class ShooterSystem extends PIDSubsystem {
   protected double getMeasurement() {
     return m_master.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
   }
+  
+  public double getSpeed() {
+    return m_topMotor.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
+  }
 }
