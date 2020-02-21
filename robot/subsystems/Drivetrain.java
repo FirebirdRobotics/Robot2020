@@ -38,21 +38,15 @@ public class Drivetrain extends SubsystemBase {
 
   private final SupplyCurrentLimitConfiguration m_currentLimitConfig;
 
-  private DifferentialDrive m_diffDrive;
-	
-  private final DifferentialDrive m_mainDrive;
-	
-  private final DifferentialDrive m_invertedDrive;
+  private final DifferentialDrive m_diffDrive;
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private final DifferentialDriveOdometry m_odometry;
-	
-  private double inversion;
+
+  private boolean dtIsInverted;
 
   public Drivetrain() {
-    inversion = false;
-	  
     m_leftMaster = new WPI_TalonFX(DriveConstants.dtFrontLeftPort);
     m_rightMaster = new WPI_TalonFX(DriveConstants.dtFrontRightPort);
     m_leftSlave = new WPI_TalonFX(DriveConstants.dtBackLeftPort);
@@ -61,10 +55,8 @@ public class Drivetrain extends SubsystemBase {
     m_currentLimitConfig = new SupplyCurrentLimitConfiguration(
       DriveConstants.kCurrentLimitingEnabled, DriveConstants.kPeakCurrentAmps,
       DriveConstants.kContCurrentAmps, DriveConstants.kPeakTimeMs);
-	  
-    m_mainDrive = new DifferentialDrive(m_leftMaster, m_rightMaster);  
-    m_invertedDrive = new DifferentialDrive(m_rightMaster, m_leftMaster);
-    m_diffDrive = m_mainDrive;
+
+    m_diffDrive = new DifferentialDrive(m_leftMaster, m_rightMaster);
 
     configTalon(m_leftMaster);
     configTalon(m_rightMaster);
@@ -78,6 +70,8 @@ public class Drivetrain extends SubsystemBase {
     m_rightMaster.setInverted(false); // CHANGE THESE UNTIL ROBOT DRIVES FORWARD
     m_leftSlave.setInverted(InvertType.FollowMaster);
     m_rightSlave.setInverted(InvertType.FollowMaster);
+
+    dtIsInverted = false;
 
     // flip so that motor output and sensor velocity are same polarity
     m_leftMaster.setSensorPhase(false);
@@ -199,25 +193,22 @@ public class Drivetrain extends SubsystemBase {
     return motors;
   }
 
-  public int invertDrivetrain(int isInverted) {
-    if (isInverted == 1) {
-      return -1;
-    } else if (isInverted == -1) {
-      return 1;
-    } else {
-      return 1;
+  /**
+   * Sets the inversion state of the drivetrain.
+   * @param setInverted Set true to invert Drivetrain
+   */
+  public void setDrivetrainInverted(boolean setInverted) {
+    if (setInverted && !dtIsInverted) { // if pass in TRUE and DT is not inverted
+      m_leftMaster.setInverted(false);
+      m_rightMaster.setInverted(true);
+      dtIsInverted = true;
+    }
+    else if (!setInverted && dtIsInverted) { // if pass in FALSE and DT is inverted
+      m_leftMaster.setInverted(true);
+      m_rightMaster.setInverted(false);
+      dtIsInverted = false;
     }
   }
-	
-   public void deepInversion () {
-     if (inversion) {
-       m_diffDrive = m_mainDrive;
-     }
-     else {
-       m_diffDrive = m_invertedDrive;
-     }
-     inversion = !inversion;
-   }
 
   /**
 	 * Returns the heading of the robot in form required for odometry.
