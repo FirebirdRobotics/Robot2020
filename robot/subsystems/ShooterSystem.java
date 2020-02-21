@@ -16,54 +16,41 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.MotorConstants;
 
 public class ShooterSystem extends PIDSubsystem {
-  private final CANSparkMax m_topMotor, m_bottomMotor;
-  private double m_topMotorSpeed, m_bottomMotorSpeed;
+  private final CANSparkMax m_master, m_slave;
+  private double m_motorSpeed;
 
   public ShooterSystem() {
     super(new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD));
 
-    m_topMotor = new CANSparkMax(ShooterConstants.shooterFirstPort, MotorType.kBrushless);
-    m_bottomMotor = new CANSparkMax(ShooterConstants.shooterSecondPort, MotorType.kBrushless);
+    m_master = new CANSparkMax(ShooterConstants.shooterFirstPort, MotorType.kBrushless);
+    m_slave = new CANSparkMax(ShooterConstants.shooterSecondPort, MotorType.kBrushless);
 
-    m_topMotor.setInverted(false);
-    m_bottomMotor.setInverted(false);
+    m_master.getEncoder().setPosition(0);
+    m_slave.getEncoder().setPosition(0);
 
-    m_topMotor.getEncoder().setPosition(0);
-    m_bottomMotor.getEncoder().setPosition(0);
+    m_slave.follow(m_master, true);
 
-    m_topMotorSpeed = 0;
-    m_bottomMotorSpeed = 0;
+    m_motorSpeed = 0;
   }
 
   public void spinShooter(double motorRPM) {
-    if (m_topMotor.getEncoder().getVelocity() < motorRPM) {
-      m_topMotorSpeed += 0.001;
-      m_topMotor.set(m_topMotorSpeed);
-    } else if (m_topMotor.getEncoder().getVelocity() > motorRPM) {
-      m_topMotorSpeed -= 0.001;
-      m_topMotor.set(m_topMotorSpeed);
-    }
-
-    if (m_bottomMotor.getEncoder().getVelocity() < motorRPM) {
-      m_bottomMotorSpeed += 0.001;
-      m_bottomMotor.set(m_bottomMotorSpeed);
-    } else if (m_bottomMotor.getEncoder().getVelocity() > motorRPM) {
-      m_bottomMotorSpeed -= 0.001;
-      m_bottomMotor.set(m_bottomMotorSpeed);
+    if (m_master.getEncoder().getVelocity() < motorRPM) {
+      m_motorSpeed += 0.001;
+      m_master.set(m_motorSpeed);
+    } else if (m_master.getEncoder().getVelocity() > motorRPM) {
+      m_motorSpeed -= 0.001;
+      m_master.set(m_motorSpeed);
     }
   }
 
   public void manualSpinMotor(double speed) {
-    m_topMotor.set(speed);
-    m_bottomMotor.set(speed);
+    m_master.set(speed);
   }
 
   public void reset() {
     disable();
-    m_topMotor.stopMotor();
-    m_bottomMotor.stopMotor();
-    m_topMotor.getEncoder().setPosition(0);
-    m_bottomMotor.getEncoder().setPosition(0);
+    m_master.stopMotor();
+    m_master.getEncoder().setPosition(0);
   }
 
   @Override
@@ -73,12 +60,11 @@ public class ShooterSystem extends PIDSubsystem {
 
   @Override
   protected void useOutput(double output, double setpoint) {
-    m_topMotor.set(output);
-    m_bottomMotor.set(output);
+    m_master.set(output);
   }
 
   @Override
   protected double getMeasurement() {
-    return m_topMotor.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
+    return m_master.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
   }
 }
