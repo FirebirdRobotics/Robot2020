@@ -16,7 +16,8 @@ import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * This subsystem is literally just for memes
+ * This subsystem is literally just for memes;
+ * The music is unable to play while the motors are running 
  * Music goes into the deploy folder (as .chrp files)
  */
 public class OrchestraSystem extends SubsystemBase {
