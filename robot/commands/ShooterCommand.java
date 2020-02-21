@@ -72,6 +72,7 @@ public class ShooterCommand extends CommandBase {
   public void execute() {
     // Starts PID loop.
     m_shooter.enable();
+    // SmartDashboard.putNumber("Shooter Test", 0);
   }
 
   // Called once the command ends or is interrupted.
