@@ -240,7 +240,7 @@ public final class Constants {
         public static final int shooterHoodSolenoid = 4;
 
         // Gear ratio
-        public static final double kGearRatio = 1.5;
+        public static final double kGearRatio = 1.75;
 
         // Other constants
         public static final double kMotorRadius = 0 * UnitConversionConstants.distanceConversionFactor;
