@@ -38,13 +38,21 @@ public class Drivetrain extends SubsystemBase {
 
   private final SupplyCurrentLimitConfiguration m_currentLimitConfig;
 
-  private final DifferentialDrive m_diffDrive;
+  private DifferentialDrive m_diffDrive;
+	
+  private final DifferentialDrive m_mainDrive;
+	
+  private final DifferentialDrive m_invertedDrive;
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private final DifferentialDriveOdometry m_odometry;
+	
+  private double inversion;
 
   public Drivetrain() {
+    inversion = false;
+	  
     m_leftMaster = new WPI_TalonFX(DriveConstants.dtFrontLeftPort);
     m_rightMaster = new WPI_TalonFX(DriveConstants.dtFrontRightPort);
     m_leftSlave = new WPI_TalonFX(DriveConstants.dtBackLeftPort);
@@ -53,8 +61,10 @@ public class Drivetrain extends SubsystemBase {
     m_currentLimitConfig = new SupplyCurrentLimitConfiguration(
       DriveConstants.kCurrentLimitingEnabled, DriveConstants.kPeakCurrentAmps,
       DriveConstants.kContCurrentAmps, DriveConstants.kPeakTimeMs);
-
-    m_diffDrive = new DifferentialDrive(m_leftMaster, m_rightMaster);
+	  
+    m_mainDrive = new DifferentialDrive(m_leftMaster, m_rightMaster);  
+    m_invertedDrive = new DifferentialDrive(m_rightMaster, m_leftMaster);
+    m_diffDrive = m_mainDrive;
 
     configTalon(m_leftMaster);
     configTalon(m_rightMaster);
@@ -198,6 +208,16 @@ public class Drivetrain extends SubsystemBase {
       return 1;
     }
   }
+	
+   public void deepInversion () {
+     if (inversion) {
+       m_diffDrive = m_mainDrive;
+     }
+     else {
+       m_diffDrive = m_invertedDrive;
+     }
+     inversion = !inversion;
+   }
 
   /**
 	 * Returns the heading of the robot in form required for odometry.
