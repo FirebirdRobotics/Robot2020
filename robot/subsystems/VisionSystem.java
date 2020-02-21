@@ -49,8 +49,23 @@ public class VisionSystem extends SubsystemBase {
   public void visionRoutineTape(Drivetrain drivetrain) {
     updateLimelightTracking();
 
+    // calculate PID error for turning (probs only use P loop or PI loop)
+    turnError = tx; // error = target - actual (but here it's calculated by limelight for us, so this is just a placeholder)
+    turnIntegralError = turnError * VisionConstants.kTimePerLoop; // integral increased by error * time (0.02 seconds per loop)
+    turnDerivativeError = (turnError - turnPreviousError) / VisionConstants.kTimePerLoop; // derivative = change in error / time (0.02 seconds per loop)
+    turnPreviousError = turnError; // update previousError to current error
+
     // Start with proportional steering
-    double m_rotationError = tx * VisionConstants.kpRotation + VisionConstants.kConstantForce;
+    double m_rotationError = (turnError * VisionConstants.kpRotation) + (turnIntegralError * VisionConstants.kiRotation)
+        + (turnDerivativeError * VisionConstants.kdRotation) + VisionConstants.kConstantForce;
+
+    // limit turn speed to the max speed
+    if (m_rotationError > VisionConstants.kMaxTurn) {
+      m_rotationError = VisionConstants.kMaxTurn;
+    } else if (m_rotationError < -VisionConstants.kMaxTurn) {
+      m_rotationError = -VisionConstants.kMaxTurn;
+    }
+
     m_steerAdjust = m_rotationError;
 
     // calculate PID error for forward/backward motion

@@ -21,7 +21,6 @@ public class TurnToAngle extends CommandBase {
   private final AHRS m_gyro;
 
   private double m_error, m_integralError, m_derivativeError, m_previousError;
-  private double kP, kI, kD;
 
   private boolean isFinished;
 

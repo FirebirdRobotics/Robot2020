@@ -30,6 +30,8 @@ public class ShooterSystem extends PIDSubsystem {
 
     m_slave.follow(m_master, true);
 
+    m_master.setInverted(false);
+
     m_motorSpeed = 0;
   }
 

@@ -39,7 +39,7 @@ public class RunPath {
       path, 
       drive::getPose, 
       new RamseteController(AutonomousConstants.kRamseteB, AutonomousConstants.kRamseteZeta), 
-      new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
+      new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, 
           DriveConstants.kaVoltSecondsSquaredPerMeter), 
       DriveConstants.kDriveKinematics, 
       drive::getWheelSpeeds, 
