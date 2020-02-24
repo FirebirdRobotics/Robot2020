@@ -56,11 +56,6 @@ public class ShooterSystem extends PIDSubsystem {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  @Override
   protected void useOutput(double output, double setpoint) {
     m_master.set(output);
   }
@@ -72,5 +67,14 @@ public class ShooterSystem extends PIDSubsystem {
   
   public double getSpeed() {
     return m_master.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
+  }
+
+  public void updateDashboard() {
+    
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
   }
 }

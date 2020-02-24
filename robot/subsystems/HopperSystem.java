@@ -24,7 +24,7 @@ public class HopperSystem extends SubsystemBase {
     m_hopperPiston = new Solenoid(HopperConstants.hopperSolenoid);
   }
 
-  public void runHopper(double speed) {
+  public void setHopper(double speed) {
     m_hopperMotor.set(speed);
   }
 
@@ -33,8 +33,25 @@ public class HopperSystem extends SubsystemBase {
     m_hopperPiston.set(!m_hopperPiston.get());
   }
 
+  /**
+   * Sets state of the solenoid in the hopper.
+   * @param state True sets piston down (closed), false sets piston up (open).
+   */
+  public void setSolenoid(boolean state) {
+    if (state && !m_hopperPiston.get()) {
+      m_hopperPiston.set(state);
+    }
+    else if (!state && m_hopperPiston.get()) {
+      m_hopperPiston.set(state);
+    }
+  }
+
   public boolean empty() {
     return true;
+  }
+
+  public void updateDashboard() {
+    
   }
 
   @Override

@@ -25,6 +25,10 @@ public class LEDSystem extends SubsystemBase {
     revBlinkin.set(color);
   }
 
+  public void updateDashboard() {
+    
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

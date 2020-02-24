@@ -25,32 +25,40 @@ public class IntakeCommand extends CommandBase {
   private double m_waitTime;
   private double m_runTime;
 
-
-  public IntakeCommand (IntakeSystem intake, HopperSystem hopper, double time_1, double time_2) {
+  /**
+   * Runs the intake with the hopper after waitTime for a period of runTime
+   * @param intake The intake subsystem to use.
+   * @param hopper The hopper subsystem to use.
+   * @param waitTime The time the command waits before running the motors.
+   * @param runTime The time the intake motors will run.
+   */
+  public IntakeCommand(IntakeSystem intake, HopperSystem hopper, double waitTime, double runTime) {
     m_intake = intake;
     m_hopper = hopper;
-    m_waitTime = time_1;
-    m_runTime = time_2;
+    m_waitTime = waitTime;
+    m_runTime = runTime;
   }
 
   @Override
   public void initialize() {
     m_timer.start();
+    m_hopper.setSolenoid(true); // true is down (closed)
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override 
   public void execute() {
-    if (m_timer.get() < m_waitTime) {;}
+    if (m_timer.get() <= m_waitTime) {;}
     else {
         m_intake.setIntake(IntakeConstants.kIntakeSpeed);
-        m_hopper.runHopper(HopperConstants.kHopperSpeed);
+        m_hopper.setHopper(HopperConstants.kHopperSpeed);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_hopper.setHopper(0);
     m_intake.setIntake(0);
     m_timer.reset();
   }
@@ -58,6 +66,6 @@ public class IntakeCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_timer.get() > m_runTime);
+    return (m_timer.get() >= m_runTime);
   }
 }

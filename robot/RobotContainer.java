@@ -151,7 +151,7 @@ public class RobotContainer {
 
         // HOPPER SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_hopper.value)
-                .whileHeld(() -> m_hopper.runHopper(HopperConstants.kHopperSpeed), m_hopper);
+                .whileHeld(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper);
         new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
                 .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
 

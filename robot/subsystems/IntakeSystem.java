@@ -34,6 +34,10 @@ public class IntakeSystem extends SubsystemBase {
     m_intakeSolenoid.set(!m_intakeSolenoid.get());
   }
 
+  public void updateDashboard() {
+    
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

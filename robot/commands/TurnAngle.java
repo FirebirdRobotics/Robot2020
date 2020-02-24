@@ -19,8 +19,7 @@ public class TurnAngle extends CommandBase {
   private double m_initialAngle;
   private final AHRS m_gyro;
 
-  private double targetZoneLower;
-  private double targetZoneUpper;
+  private double targetZoneLower, targetZoneUpper;
 
   private boolean isFinished;
 

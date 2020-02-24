@@ -84,6 +84,10 @@ public class ColorWheelSystem extends SubsystemBase {
 
   }
 
+  public void updateDashboard() {
+    
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

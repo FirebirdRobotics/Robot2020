@@ -43,7 +43,7 @@ public class ShooterCommand extends CommandBase {
     //distanceToTarget = m_vision.rawDistanceToTarget();
 
     /*
-     * get velocity required to get to target:
+     * calculate velocity required to get to target:
      * 
      * velocity = distance / (time * cos(angle of shooter))
      * 
@@ -72,7 +72,7 @@ public class ShooterCommand extends CommandBase {
     // convert velocity (in m/s) into unitless ratio
     m_velocity = (m_velocity * 60) / (MotorConstants.kNeoRPM * ShooterConstants.kGearRatio * 2.0 * Math.PI * ShooterConstants.kMotorRadius);
 
-    SmartDashboard.putNumber("Calculated Shooter SetPoint", m_velocity);
+    SmartDashboard.putNumber("Calculated Shooter Setpoint", m_velocity);
 
     // don't run motor greater than max speed (on -1 to 1 ratio)
     // can be changed to maximum safe velocity
@@ -91,8 +91,8 @@ public class ShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Current Shooter Speed", m_shooter.getSpeed()*MotorConstants.kNeoRPM);
-    SmartDashboard.putNumber("Shooter spin ratio", m_shooter.getSpeed() / m_velocity);
+    SmartDashboard.putNumber("Current Shooter Speed", m_shooter.getSpeed() * MotorConstants.kNeoRPM);
+    SmartDashboard.putNumber("Shooter Spin Ratio", m_shooter.getSpeed() / m_velocity);
     // Starts PID loop.
     m_shooter.enable();
   }

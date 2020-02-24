@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 // import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -22,9 +24,11 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.UnitConversionConstants;
@@ -41,6 +45,9 @@ public class Drivetrain extends SubsystemBase {
   private final DifferentialDrive m_diffDrive;
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
+  private ShuffleboardTab graphTab = Shuffleboard.getTab("Graphs");
+  private ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
   private final DifferentialDriveOdometry m_odometry;
 
@@ -120,8 +127,8 @@ public class Drivetrain extends SubsystemBase {
   /**
 	 * Controls the left and right sides of the drive directly with voltages.
 	 *
-	 * @param leftVolts  the commanded left output
-	 * @param rightVolts the commanded right output
+	 * @param leftVolts The voltage to output for the left side
+	 * @param rightVolts The voltage to output for the right side
 	 */
 	public void tankDriveVolts(double leftVolts, double rightVolts) {
     m_leftMaster.setVoltage(leftVolts);
@@ -355,6 +362,66 @@ public class Drivetrain extends SubsystemBase {
 
   public double getRightEncoderPosition2 () {
     return m_rightMaster.getSelectedSensorPosition();
+  }
+
+  public void updateDashboard() {
+    autoTab.add("Pose", m_odometry.getPoseMeters().toString());
+
+		autoTab.addNumber("Left Position", new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return getLeftEncoderPosition();
+			}
+    });
+    
+    autoTab.addNumber("Right Position", new DoubleSupplier(){
+			@Override
+			public double getAsDouble() {
+				return getRightEncoderPosition();
+			}
+		});
+
+		autoTab.addNumber("Left Velocity", new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return getLeftEncoderRate();
+			}
+    });
+    
+    autoTab.addNumber("Right Velocity", new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return getRightEncoderRate();
+			}
+		});
+
+		graphTab.addNumber("Left Volts", new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return m_leftMaster.getMotorOutputVoltage();
+			}
+		}).withWidget("Graph");
+
+		graphTab.addNumber("Right Volts", new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return m_rightMaster.getMotorOutputVoltage();
+			}
+    }).withWidget("Graph");
+    
+    graphTab.addNumber("Left Setpoint", new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return AutonomousConstants.leftController.getSetpoint();
+			}
+		}).withWidget("Graph");
+
+		graphTab.addNumber("Right Setpoint", new DoubleSupplier() {
+			@Override
+			public double getAsDouble() {
+				return AutonomousConstants.rightController.getSetpoint();
+			}
+		}).withWidget("Graph");
   }
 
   @Override

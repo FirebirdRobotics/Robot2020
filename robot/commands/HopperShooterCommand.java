@@ -53,7 +53,7 @@ public class HopperShooterCommand extends ShooterCommand {
       }
 
       if (m_hopperTimer.get() < AutonomousConstants.kHopperWaitTime) { // wait for shooter to warm up
-        m_hopper.runHopper(HopperConstants.kHopperSpeed); // run hopper for kHopperWaitTime
+        m_hopper.setHopper(HopperConstants.kHopperSpeed); // run hopper for kHopperWaitTime
       } else if (m_hopperTimer.get() > AutonomousConstants.kShooterWaitTime) {
         m_count++;
         m_hopperTimer.reset(); // reset hopper timer if no ball is in shooter

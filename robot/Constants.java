@@ -15,6 +15,7 @@ import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -91,6 +92,10 @@ public final class Constants {
         // Motion constants
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+        // PID Controllers for Ramsete (we make them here b/c SmartDashboard)
+        public static final PIDController leftController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
+        public static final PIDController rightController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds (These are given as recommendation by WPILIB)
         public static final double kRamseteB = 2;
@@ -286,6 +291,9 @@ public final class Constants {
         public static double closestTargetArea = 0; // for using target area
         public static double closestTargetDistance = 0; // for using target distance
 
+        // TURNING TO TARGET STUFF
+        public static final double kTargetZone = 0.01; // error zone for aligning to target with vision (deg)
+        
         // DISTANCE CALC STUFF (trig)
         public static final double kTargetHeight = FieldConstants.kTargetHeight; // height of target above floor (in)
         public static final double kLimelightHeight = 47.5; // height of camera above floor (in)

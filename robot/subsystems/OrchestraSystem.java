@@ -97,6 +97,10 @@ public class OrchestraSystem extends SubsystemBase {
     loadMusicSelection(-1);
   }
 
+  public void updateDashboard() {
+    
+  }
+
   @Override
   public void periodic() {
     /* if song selection changed, auto-play it */

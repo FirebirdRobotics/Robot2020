@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
-//import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,8 +24,8 @@ public class VisionSystem extends SubsystemBase {
   private final NetworkTable m_limelight;
   private boolean m_limelightHasValidTarget;
   private double tv, tx, ty, ta;
-  private double driveError, driveIntegralError, driveDerivativeError, drivePreviousError;
-  private double turnError, turnIntegralError, turnDerivativeError, turnPreviousError;
+  private double driveIntegralError, drivePreviousError;
+  private double turnIntegralError, turnPreviousError;
 
   private double m_steerAdjust; // amount to rotate drivetrain
   private double m_driveAdjust; // amount to drive drivetrain
@@ -50,9 +49,9 @@ public class VisionSystem extends SubsystemBase {
     updateLimelightTracking();
 
     // calculate PID error for turning (probs only use P loop or PI loop)
-    turnError = tx; // error = target - actual (but here it's calculated by limelight for us, so this is just a placeholder)
-    turnIntegralError = turnError * VisionConstants.kTimePerLoop; // integral increased by error * time (0.02 seconds per loop)
-    turnDerivativeError = (turnError - turnPreviousError) / VisionConstants.kTimePerLoop; // derivative = change in error / time (0.02 seconds per loop)
+    double turnError = tx; // error = target - actual (but here it's calculated by limelight for us, so this is just a placeholder)
+    turnIntegralError += turnError * VisionConstants.kTimePerLoop; // integral increased by error * time (0.02 seconds per loop)
+    double turnDerivativeError = (turnError - turnPreviousError) / VisionConstants.kTimePerLoop; // derivative = change in error / time (0.02 seconds per loop)
     turnPreviousError = turnError; // update previousError to current error
 
     // Start with proportional steering
@@ -69,9 +68,9 @@ public class VisionSystem extends SubsystemBase {
     m_steerAdjust = m_rotationError;
 
     // calculate PID error for forward/backward motion
-    driveError = VisionConstants.closestTargetArea - ta; // error = target - actual
+    double driveError = VisionConstants.closestTargetArea - ta; // error = target - actual
     driveIntegralError += driveError * VisionConstants.kTimePerLoop; // integral increased by error * time (0.02 seconds per loop)
-    driveDerivativeError = (driveError - drivePreviousError) / VisionConstants.kTimePerLoop; // derivative = change in error / time (0.02 seconds per loop)
+    double driveDerivativeError = (driveError - drivePreviousError) / VisionConstants.kTimePerLoop; // derivative = change in error / time (0.02 seconds per loop)
     drivePreviousError = driveError; // update previousError to current error
 
     // drive forward/backward until we reach our desired distance
@@ -95,15 +94,29 @@ public class VisionSystem extends SubsystemBase {
   }
 
   public void visionRoutineReleased(Drivetrain m_drive) {
+    resetConstants();
+
     m_driveAdjust = 0.0;
     m_steerAdjust = 0.0;
     m_drive.arcadeDrive(0.0, 0.0);
     setPipeline(1);
   }
 
-  public void turnToTarget(Drivetrain drivetrain) {
-    updateLimelightTracking();
+  public void resetConstants() {
+    driveIntegralError = 0.0;
+    drivePreviousError = 0.0;
+    turnIntegralError = 0.0;
+    turnPreviousError = 0.0;
+  }
 
+  /**
+   * Used to turn the robot to the target during autonomous.
+   * @param drivetrain The Drivetrain subsystem to pass in.
+   * @return Returns true if turning is completed, otherwise returns false (for command).
+   */
+  public boolean turnToTarget(Drivetrain drivetrain) {
+    updateLimelightTracking();
+    
     double isNegative;
     if (tx < 0) {
       isNegative = -1;
@@ -119,21 +132,23 @@ public class VisionSystem extends SubsystemBase {
     m_steerAdjust = m_rotationError;
 
     if (m_limelightHasValidTarget) { // if limelight sees target
+      if (Math.abs(tx) <= VisionConstants.kTargetZone) { // if target is within zone
+        drivetrain.autoDrive(0.0, 0.0);
+        return true;
+      }
       drivetrain.autoDrive(0, m_steerAdjust); // drive using command-tuned values
+      return false;
     } else {
       drivetrain.autoDrive(0.0, 0.0); // otherwise do nothing
+      return true;
     }
   }
 
-  public void updateVisionMeasurements() {
+  public void updateLimelightTracking() {
     tv = m_limelight.getEntry("tv").getDouble(0);
     tx = m_limelight.getEntry("tx").getDouble(0);
     ty = m_limelight.getEntry("ty").getDouble(0);
     ta = m_limelight.getEntry("ta").getDouble(0);
-  }
-
-  public void updateLimelightTracking() {
-    updateVisionMeasurements();
 
     SmartDashboard.putNumber("Target Detected", tv);
     SmartDashboard.putNumber("Horizontal Error", tx);
@@ -244,12 +259,21 @@ public class VisionSystem extends SubsystemBase {
   }
 
   public double rawDistanceToTarget() {
-    updateVisionMeasurements();
+    updateLimelightTracking();
     return distanceToTarget(ty);
+  }
+
+  public double getAngleToTarget() {
+    updateLimelightTracking();
+    return tx;
   }
 
   public void setPipeline(int pipeline) {
     m_limelight.getEntry("pipeline").setNumber(pipeline);
+  }
+
+  public void updateDashboard() {
+    
   }
 
   @Override

@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -43,8 +42,8 @@ public class RunPath {
           DriveConstants.kaVoltSecondsSquaredPerMeter), 
       DriveConstants.kDriveKinematics, 
       drive::getWheelSpeeds, 
-      new PIDController(DriveConstants.kPDriveVel, 0, 0), 
-      new PIDController(DriveConstants.kPDriveVel, 0, 0), 
+      AutonomousConstants.leftController, 
+      AutonomousConstants.rightController, 
       drive::tankDriveVolts, drive);
   }
 }

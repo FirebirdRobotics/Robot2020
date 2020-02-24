@@ -92,6 +92,10 @@ public class ClimbSystem extends SubsystemBase {
     m_skiLift.set(speed);
   }
 
+  public void updateDashboard() {
+    
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
