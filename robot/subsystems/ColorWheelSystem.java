@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 //import javax.swing.text.StyleConstants.ColorConstants;
 
 import com.revrobotics.CANSparkMax;
@@ -16,6 +18,8 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +30,9 @@ public class ColorWheelSystem extends SubsystemBase {
   private final CANSparkMax m_colorSpinner;
   private final ColorSensorV3 m_colorSensor;
   private final ColorMatch m_colorMatcher;
+  private String colorString;
+
+  private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
   public ColorWheelSystem() {
     m_colorSpinner = new CANSparkMax(ColorWheelConstants.colorWheelPort, MotorType.kBrushless);
@@ -48,7 +55,6 @@ public class ColorWheelSystem extends SubsystemBase {
     Color detectedColor = m_colorSensor.getColor();
     ColorMatchResult closestMatch = m_colorMatcher.matchClosestColor(detectedColor);
 
-    String colorString;
     if (closestMatch.color == ColorWheelConstants.kBlueTarget) {
       colorString = "Blue";
     } else if (closestMatch.color == ColorWheelConstants.kRedTarget) {
@@ -76,7 +82,7 @@ public class ColorWheelSystem extends SubsystemBase {
   }
 
   public void spinOneRotation() {
-
+    
   }
 
   // will send in a sendable chooser (select color from dashboard)
@@ -85,11 +91,16 @@ public class ColorWheelSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    
+    m_teleopTab.addString("Color Detected", new Supplier<String>(){
+      @Override
+      public String get() {
+        return colorString;
+      }
+    });
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    updateDashboard();
   }
 }

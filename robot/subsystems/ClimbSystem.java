@@ -7,11 +7,15 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
@@ -25,6 +29,8 @@ public class ClimbSystem extends SubsystemBase {
   
   private final CANSparkMax m_elevatorMotor, m_skiLift;
   private final CANPIDController m_elevatorPID;
+
+  private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
   public ClimbSystem() {
     m_elevatorMotor = new CANSparkMax(ClimbConstants.elevatorPort, MotorType.kBrushless);
@@ -93,11 +99,16 @@ public class ClimbSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    
+    m_teleopTab.addNumber("Elevator Encoder", new DoubleSupplier() {
+      @Override
+      public double getAsDouble() {
+        return m_elevatorMotor.getEncoder().getPosition();
+      }
+    });
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    updateDashboard();
   }
 }

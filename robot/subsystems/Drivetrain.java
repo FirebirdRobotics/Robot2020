@@ -46,8 +46,8 @@ public class Drivetrain extends SubsystemBase {
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-  private ShuffleboardTab graphTab = Shuffleboard.getTab("Graphs");
-  private ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
+  // private ShuffleboardTab m_graphTab = Shuffleboard.getTab("Graphs");
+  private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
 
   private final DifferentialDriveOdometry m_odometry;
 
@@ -365,58 +365,58 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    autoTab.add("Pose", m_odometry.getPoseMeters().toString());
+    m_autoTab.add("Pose", m_odometry.getPoseMeters().toString());
 
-		autoTab.addNumber("Left Position", new DoubleSupplier() {
+		m_autoTab.addNumber("Left Position", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return getLeftEncoderPosition();
 			}
     });
     
-    autoTab.addNumber("Right Position", new DoubleSupplier(){
+    m_autoTab.addNumber("Right Position", new DoubleSupplier(){
 			@Override
 			public double getAsDouble() {
 				return getRightEncoderPosition();
 			}
 		});
 
-		autoTab.addNumber("Left Velocity", new DoubleSupplier() {
+		m_autoTab.addNumber("Left Velocity", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return getLeftEncoderRate();
 			}
     });
     
-    autoTab.addNumber("Right Velocity", new DoubleSupplier() {
+    m_autoTab.addNumber("Right Velocity", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return getRightEncoderRate();
 			}
 		});
 
-		graphTab.addNumber("Left Volts", new DoubleSupplier() {
+		m_autoTab.addNumber("Left Volts", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return m_leftMaster.getMotorOutputVoltage();
 			}
 		}).withWidget("Graph");
 
-		graphTab.addNumber("Right Volts", new DoubleSupplier() {
+		m_autoTab.addNumber("Right Volts", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return m_rightMaster.getMotorOutputVoltage();
 			}
     }).withWidget("Graph");
     
-    graphTab.addNumber("Left Setpoint", new DoubleSupplier() {
+    m_autoTab.addNumber("Left Setpoint", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return AutonomousConstants.leftController.getSetpoint();
 			}
 		}).withWidget("Graph");
 
-		graphTab.addNumber("Right Setpoint", new DoubleSupplier() {
+		m_autoTab.addNumber("Right Setpoint", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return AutonomousConstants.rightController.getSetpoint();
@@ -427,6 +427,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-		m_odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderPosition(), getRightEncoderPosition());
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderPosition(), getRightEncoderPosition());
+    updateDashboard();
   }
 }

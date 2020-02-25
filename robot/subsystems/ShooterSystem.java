@@ -7,17 +7,24 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.MotorConstants;
 
 public class ShooterSystem extends PIDSubsystem {
+
   private final CANSparkMax m_master, m_slave;
   private double m_motorSpeed;
+
+  private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
   public ShooterSystem() {
     super(new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD));
@@ -62,15 +69,21 @@ public class ShooterSystem extends PIDSubsystem {
 
   @Override
   protected double getMeasurement() {
-    return m_master.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
+    return getSpeed();
   }
   
+  // returns the speed in ratio form (but using the encoder)
   public double getSpeed() {
     return m_master.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
   }
 
   public void updateDashboard() {
-    
+    m_teleopTab.addNumber("Shooter Speed", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return getSpeed();
+      }
+    });
   }
 
   @Override

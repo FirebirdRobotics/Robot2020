@@ -7,10 +7,14 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HopperConstants;
 
@@ -18,6 +22,8 @@ public class HopperSystem extends SubsystemBase {
   
   private final CANSparkMax m_hopperMotor;
   private final Solenoid m_hopperPiston;
+
+  private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
   public HopperSystem() {
     m_hopperMotor = new CANSparkMax(HopperConstants.hopperPort, MotorType.kBrushless);
@@ -51,11 +57,20 @@ public class HopperSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    
+    m_teleopTab.addString("Hopper Piston", new Supplier<String>(){
+      @Override
+      public String get() {
+        if (m_hopperPiston.get()) {
+          return "Closed";
+        } else {
+          return "Open";
+        }
+      }
+    });
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    updateDashboard();
   }
 }

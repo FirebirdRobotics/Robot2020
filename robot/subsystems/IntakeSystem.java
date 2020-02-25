@@ -7,10 +7,14 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -18,6 +22,8 @@ public class IntakeSystem extends SubsystemBase {
   
   private final CANSparkMax m_intakeMotor;
   private final Solenoid m_intakeSolenoid;
+
+  private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
   public IntakeSystem() {
     m_intakeMotor = new CANSparkMax(IntakeConstants.intakePort, MotorType.kBrushless);
@@ -35,7 +41,12 @@ public class IntakeSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    
+    m_teleopTab.addNumber("Intake Speed", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return m_intakeMotor.get();
+      }
+    });
   }
 
   @Override

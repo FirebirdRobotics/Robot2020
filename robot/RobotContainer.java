@@ -161,13 +161,15 @@ public class RobotContainer {
                         m_hopper.setHopper(0);
                 });
 
-        // SHOOTER & HOPPER SYSTEM
-        // new JoystickButton(m_driverController, OIConstants.b_shooter.value)
-        //         .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM), m_shooter);
+        // HOPPER SYSTEM; note- if the advanced commands and stuff works, there's no need to have manual hopper
         // new JoystickButton(m_driverController, OIConstants.b_hopper.value)
         //         .whileHeld(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper);
         // new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
         //         .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
+
+        // SHOOTER SYSTEM
+        // new JoystickButton(m_driverController, OIConstants.b_shooter.value)
+        //         .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM), m_shooter);
         new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
                 .whenPressed(new AutoShooterCommand(m_shooter, m_hopper, m_visionSystem, 5), true);
 

@@ -7,8 +7,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.UnitConversionConstants;
@@ -29,6 +33,8 @@ public class VisionSystem extends SubsystemBase {
 
   private double m_steerAdjust; // amount to rotate drivetrain
   private double m_driveAdjust; // amount to drive drivetrain
+
+  private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
   public VisionSystem() {
     // Points "m_limelight" to the limelight database
@@ -276,11 +282,46 @@ public class VisionSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    
+    m_teleopTab.addNumber("Target Detected", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return tv;
+      }
+    });
+    m_teleopTab.addNumber("Horizontal Error", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return tx;
+      }
+    });
+    m_teleopTab.addNumber("Vertical Error", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return ty;
+      }
+    });
+    m_teleopTab.addNumber("Target Area", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return ta;
+      }
+    });
+    // m_teleopTab.addNumber("Closest Target (Area)", new DoubleSupplier(){
+    //   @Override
+    //   public double getAsDouble() {
+    //     return VisionConstants.closestTargetArea;
+    //   }
+    // });
+    m_teleopTab.addNumber("Closest Target (Distance)", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return VisionConstants.closestTargetDistance;
+      }
+    });
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    updateDashboard();
   }
 }
