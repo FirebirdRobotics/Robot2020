@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import frc.robot.Constants.*;
+import frc.robot.commands.AutoShooterCommand;
 import frc.robot.commands.Autonomous;
 import frc.robot.commands.LiftElevator;
 import frc.robot.subsystems.*;
@@ -89,7 +90,7 @@ public class RobotContainer {
 
     // Variables for customizing the robot while it is live
     public double m_speedy = 0.2; // adds/subtracts speed from robot
-    public boolean m_swappy = false;
+    public boolean m_swappy = false; // tells whether to invert drivetrain
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -130,7 +131,7 @@ public class RobotContainer {
         // DRIVETRAIN (live controls)
         new JoystickButton(m_driverController, OIConstants.b_moreSpeedy.value).whenPressed(() -> m_speedy += 0.05);
         new JoystickButton(m_driverController, OIConstants.b_lessSpeedy.value).whenPressed(() -> m_speedy -= 0.05);
-        new JoystickButton(m_driverController, OIConstants.b_swappy.value).whenPressed(() -> {
+        new JoystickButton(m_driverController, OIConstants.b_swappy.value).whenPressed(() -> {  
                 m_drivetrain.setDrivetrainInverted(!m_swappy);
                 m_swappy = !m_swappy;
         }, m_drivetrain);
@@ -147,28 +148,35 @@ public class RobotContainer {
 
         // COLORWHEEL SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
-                .whileHeld(() -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed), m_colorSpinner);
-
-        // HOPPER SYSTEM
-        new JoystickButton(m_driverController, OIConstants.b_hopper.value)
-                .whileHeld(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper);
-        new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
-                .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
+                .whileHeld(() -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed), m_colorSpinner);        
 
         // INTAKE SYSTEM
         new JoystickButton(m_driverController, OIConstants.b_intake.value)
-                .whileHeld(() -> m_intake.setIntake(IntakeConstants.kIntakeSpeed), m_intake);
+                .whileHeld(() -> {
+                        m_intake.setIntake(IntakeConstants.kIntakeSpeed);
+                        m_hopper.setHopper(HopperConstants.kHopperSpeed);
+                }, m_intake, m_hopper)
+                .whenReleased(() -> {
+                        m_intake.setIntake(0);
+                        m_hopper.setHopper(0);
+                });
 
-        // SHOOTER SYSTEM
-        new JoystickButton(m_driverController, OIConstants.b_shooter.value)
-                .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM), m_shooter);
-        // new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
-        // .whileHeld(new ShooterCommand(m_shooter, m_visionSystem), false);
+        // SHOOTER & HOPPER SYSTEM
+        // new JoystickButton(m_driverController, OIConstants.b_shooter.value)
+        //         .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM), m_shooter);
+        // new JoystickButton(m_driverController, OIConstants.b_hopper.value)
+        //         .whileHeld(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper);
+        // new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
+        //         .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
+        new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
+                .whenPressed(new AutoShooterCommand(m_shooter, m_hopper, m_visionSystem, 5), true);
 
         // VISION SYSTEM
+        // new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
+        //         .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
+        //         .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
         new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
-                .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
-                .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
+                .whenPressed(() -> m_visionSystem.turnToTarget(m_drivetrain), m_drivetrain);
 
         // ORCHESTRA
         new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)

@@ -58,6 +58,9 @@ public class VisionSystem extends SubsystemBase {
     double m_rotationError = (turnError * VisionConstants.kpRotation) + (turnIntegralError * VisionConstants.kiRotation)
         + (turnDerivativeError * VisionConstants.kdRotation) + VisionConstants.kConstantForce;
 
+    m_rotationError /= 90;
+    m_rotationError += 0.1;
+
     // limit turn speed to the max speed
     if (m_rotationError > VisionConstants.kMaxTurn) {
       m_rotationError = VisionConstants.kMaxTurn;

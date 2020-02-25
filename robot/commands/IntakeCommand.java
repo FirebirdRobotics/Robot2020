@@ -37,6 +37,7 @@ public class IntakeCommand extends CommandBase {
     m_hopper = hopper;
     m_waitTime = waitTime;
     m_runTime = runTime;
+    addRequirements(m_intake, m_hopper);
   }
 
   @Override
