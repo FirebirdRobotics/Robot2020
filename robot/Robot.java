@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // Creates necessary tabs once robot is created.
+    // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     m_robotContainer.getGyro().reset();
     m_robotContainer.getVisionSystem().setPipeline(1);
