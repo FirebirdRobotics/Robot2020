@@ -11,8 +11,9 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import frc.robot.Constants.*;
 import frc.robot.commands.AutoShooterCommand;
@@ -39,6 +40,7 @@ public class RobotContainer {
     private final ColorWheelSystem m_colorSpinner = new ColorWheelSystem();
     private final HopperSystem m_hopper = new HopperSystem();
     private final IntakeSystem m_intake = new IntakeSystem();
+    private final LEDSystem m_ledSystem = new LEDSystem();
     private final OrchestraSystem m_orchestra = new OrchestraSystem(m_drivetrain);
 
     // Define all controllers
@@ -88,6 +90,9 @@ public class RobotContainer {
     // Create a sendable chooser for auto programs
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+    // Create Shuffleboard Tabs
+    private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+
     // Variables for customizing the robot while it is live
     public double m_speedy = 0.2; // adds/subtracts speed from robot
     public boolean m_swappy = false; // tells whether to invert drivetrain
@@ -107,10 +112,10 @@ public class RobotContainer {
 
         // AUTONOMOUS
         m_chooser.setDefaultOption("Enemy Trench", m_enemyTrench);
-        m_chooser.setDefaultOption("Middle", m_middle);
-        m_chooser.setDefaultOption("Ally Trench", m_allyTrench);
-
-        SmartDashboard.putData("Autonomous", m_chooser);
+        m_chooser.addOption("Middle", m_middle);
+        m_chooser.addOption("Ally Trench", m_allyTrench);
+        
+        m_autoTab.add(m_chooser);
     }
 
     public AHRS getGyro() {
@@ -179,6 +184,10 @@ public class RobotContainer {
         //         .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
         new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
                 .whenPressed(() -> m_visionSystem.turnToTarget(m_drivetrain), m_drivetrain);
+
+        // LED SYSTEM
+        new JoystickButton(m_driverController, OIConstants.b_cycleLEDs.value)
+                .whenPressed(() -> m_ledSystem.cycleColor(), m_ledSystem);
 
         // ORCHESTRA
         new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)

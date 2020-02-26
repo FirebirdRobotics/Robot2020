@@ -70,6 +70,9 @@ public final class Constants {
         // VISIONSYSTEM
         public static final Button b_visionRoutineTape = Button.kA;
 
+        // LEDSYSTEM
+        public static final Button b_cycleLEDs = Button.kA;
+
         // ORCHESTRA
         public static final Button b_nextSong = Button.kA;
         public static final Button b_prevSong = Button.kA;
@@ -261,7 +264,21 @@ public final class Constants {
         // Rev Blinkin, page 14: http://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
         public static final double kRed = 0.61;
         public static final double kYellow = 0.69;
-        public static final double kBlack = 0.99;
+        public static final double kBlue = 0.87;
+        public static final double kWhite = 0.93;
+        public static final double kRainbowLavaPalette = -0.93;
+        public static final double kSinelonLavaPalette = -0.73;
+        public static final double kBeatsPerMinuteLavaPalette = -0.63;
+        public static final double kFireMedium = -0.59;
+        public static final double kFireLarge = -0.57;
+        public static final double kTwinklesLavaPalette = -0.49;
+        public static final double kColorWavesLavaPalette = -0.39;
+        public static final double kLarsonScannerRed = -0.35;
+        public static final double kLightChaseRed = -0.31;
+        public static final double kHeartbeatRed = -0.25;
+        public static final double kBreatheRed = -0.17;
+        public static final double kStrobeRed = -0.11;
+        public static final double kRainbow = -0.99;
     }
 
     // Vision

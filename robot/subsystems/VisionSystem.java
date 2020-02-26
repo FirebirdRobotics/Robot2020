@@ -13,7 +13,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.UnitConversionConstants;
 import frc.robot.Constants.VisionConstants;
@@ -64,8 +63,9 @@ public class VisionSystem extends SubsystemBase {
     double m_rotationError = (turnError * VisionConstants.kpRotation) + (turnIntegralError * VisionConstants.kiRotation)
         + (turnDerivativeError * VisionConstants.kdRotation) + VisionConstants.kConstantForce;
 
-    m_rotationError /= 90;
-    m_rotationError += 0.1;
+    // No mathematical reasoning here, but helps to convert angle to ratio form
+    // m_rotationError /= 90;
+    // m_rotationError += 0.1;
 
     // limit turn speed to the max speed
     if (m_rotationError > VisionConstants.kMaxTurn) {
@@ -159,18 +159,13 @@ public class VisionSystem extends SubsystemBase {
     ty = m_limelight.getEntry("ty").getDouble(0);
     ta = m_limelight.getEntry("ta").getDouble(0);
 
-    SmartDashboard.putNumber("Target Detected", tv);
-    SmartDashboard.putNumber("Horizontal Error", tx);
-    SmartDashboard.putNumber("Vertical Error", ty);
-    SmartDashboard.putNumber("Target Area", ta);
-    SmartDashboard.putNumber("Closest Target (Area)", VisionConstants.closestTargetArea);
-    SmartDashboard.putNumber("Closest Target (Distance)", VisionConstants.closestTargetDistance);
+    updateDashboard();
 
     // set pipeline to vision processing
     setPipeline(0);
 
     // using target area
-    VisionConstants.closestTargetArea = getClosestTargetArea(VisionConstants.kTargetAreas, ta);
+    // VisionConstants.closestTargetArea = getClosestTargetArea(VisionConstants.kTargetAreas, ta);
 
     // using target distance
     VisionConstants.closestTargetDistance = getClosestTargetDistance(VisionConstants.kTargetDistances,
@@ -187,34 +182,34 @@ public class VisionSystem extends SubsystemBase {
   }
 
   // function that returns the value in kTargetAreas closest to your robot
-  public double getClosestTargetArea(double[] targetAreas, double currentTargetArea) {
-    // setup the array containing distances to targets
-    for (int i = 0; i < VisionConstants.kTargetAreas.length; i++) {
-      // if currentTA above target (array value), will give back negative value
-      // if currentTA below target (array value), will give back positive value
-      double thisTargetArea = VisionConstants.kTargetAreas[i] - currentTargetArea;
-      VisionConstants.distancesToTargets[i] = thisTargetArea; // set index i of dist targets array
-    }
+  // public double getClosestTargetArea(double[] targetAreas, double currentTargetArea) {
+  //   // setup the array containing distances to targets
+  //   for (int i = 0; i < VisionConstants.kTargetAreas.length; i++) {
+  //     // if currentTA above target (array value), will give back negative value
+  //     // if currentTA below target (array value), will give back positive value
+  //     double thisTargetArea = VisionConstants.kTargetAreas[i] - currentTargetArea;
+  //     VisionConstants.distancesToTargets[i] = thisTargetArea; // set index i of dist targets array
+  //   }
 
-    // find lowest distance to targets
-    double lowestDistance = 100.0; // arbitrary initial value
-    for (int i = 0; i < VisionConstants.kTargetAreas.length; i++) {
-      // take abs value of distance to target (read above comments)
-      if (Math.abs(VisionConstants.distancesToTargets[i]) < lowestDistance) {
-        lowestDistance = VisionConstants.distancesToTargets[i];
-      }
-    }
+  //   // find lowest distance to targets
+  //   double lowestDistance = 100.0; // arbitrary initial value
+  //   for (int i = 0; i < VisionConstants.kTargetAreas.length; i++) {
+  //     // take abs value of distance to target (read above comments)
+  //     if (Math.abs(VisionConstants.distancesToTargets[i]) < lowestDistance) {
+  //       lowestDistance = VisionConstants.distancesToTargets[i];
+  //     }
+  //   }
 
-    // now with lowest distance get index of target area
-    int targetIndex = 0;
-    for (int i = 0; i < VisionConstants.kTargetAreas.length; i++) {
-      if (lowestDistance == VisionConstants.distancesToTargets[i]) {
-        targetIndex = i;
-      }
-    }
+  //   // now with lowest distance get index of target area
+  //   int targetIndex = 0;
+  //   for (int i = 0; i < VisionConstants.kTargetAreas.length; i++) {
+  //     if (lowestDistance == VisionConstants.distancesToTargets[i]) {
+  //       targetIndex = i;
+  //     }
+  //   }
 
-    return VisionConstants.kTargetAreas[targetIndex];
-  }
+  //   return VisionConstants.kTargetAreas[targetIndex];
+  // }
 
   // same function as above but uses target distance instead of the targetArea
   // calculated by limelight
@@ -246,21 +241,21 @@ public class VisionSystem extends SubsystemBase {
 
     return VisionConstants.kTargetDistances[targetIndex];
   }
-
+  /**
+   * Math: http://docs.limelightvision.io/en/latest/cs_estimating_distance.html
+   * 
+   * tangent = opposite / adjacent tan(a1+a2) = (h2-h1) / d
+   * 
+   * where: a1 = angle the camera is mounted at (probably somewhere between 0-90deg) 
+   * a2 = angle of the camera to the target (its the "ty" value output by limelight) 
+   * h2 = height of the target h1 = height of the camera
+   * 
+   * distance of camera to target = height from camera to target / angle of camera to target 
+   * d = (h2-h1) / tan(a1+a2)
+   * 
+   * @param targetAngle The vertica angle at which the camera is with respect to the target
+   */
   public double distanceToTarget(double targetAngle) {
-    /*
-     * Math: http://docs.limelightvision.io/en/latest/cs_estimating_distance.html
-     * 
-     * tangent = opposite / adjacent tan(a1+a2) = (h2-h1) / d
-     * 
-     * where: a1 = angle the camera is mounted at (probably somewhere between 0-90deg) 
-     * a2 = angle of the camera to the target (its the "ty" value output by limelight) 
-     * h2 = height of the target h1 = height of the camera
-     * 
-     * distance of camera to target = height from camera to target / angle of camera to target 
-     * d = (h2-h1) / tan(a1+a2)
-     */
-
     // the only thing that changes in this equation is targetAngle, which is ty in
     // this project
     return (VisionConstants.kTargetHeight - VisionConstants.kLimelightHeight)
@@ -306,12 +301,6 @@ public class VisionSystem extends SubsystemBase {
         return ta;
       }
     });
-    // m_teleopTab.addNumber("Closest Target (Area)", new DoubleSupplier(){
-    //   @Override
-    //   public double getAsDouble() {
-    //     return VisionConstants.closestTargetArea;
-    //   }
-    // });
     m_teleopTab.addNumber("Closest Target (Distance)", new DoubleSupplier(){
       @Override
       public double getAsDouble() {

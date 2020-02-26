@@ -12,23 +12,21 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-import frc.robot.Constants.ShooterConstants;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
+import frc.robot.Constants.ShooterConstants;
 
-public class ShooterSystem extends PIDSubsystem {
-
+public class ShooterSystem extends SubsystemBase {
+  /**
+   * Creates a new New_ShooterSystem.
+   */
   private final CANSparkMax m_master, m_slave;
-  private double m_motorSpeed;
-
   private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
-  public ShooterSystem() {
-    super(new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD));
 
+  public ShooterSystem() {
     m_master = new CANSparkMax(ShooterConstants.shooterFirstPort, MotorType.kBrushless);
     m_slave = new CANSparkMax(ShooterConstants.shooterSecondPort, MotorType.kBrushless);
 
@@ -38,41 +36,12 @@ public class ShooterSystem extends PIDSubsystem {
     m_slave.follow(m_master, true);
 
     m_master.setInverted(false);
-
-    m_motorSpeed = 0;
-  }
-
-  public void spinShooter(double motorRPM) {
-    if (m_master.getEncoder().getVelocity() < motorRPM) {
-      m_motorSpeed += 0.001;
-      m_master.set(m_motorSpeed);
-    } else if (m_master.getEncoder().getVelocity() > motorRPM) {
-      m_motorSpeed -= 0.001;
-      m_master.set(m_motorSpeed);
-    }
   }
 
   public void manualSpinMotor(double speed) {
     m_master.set(speed);
   }
 
-  public void reset() {
-    disable();
-    m_master.stopMotor();
-    m_master.getEncoder().setPosition(0);
-  }
-
-  @Override
-  protected void useOutput(double output, double setpoint) {
-    m_master.set(output);
-  }
-
-  @Override
-  protected double getMeasurement() {
-    return getSpeed();
-  }
-  
-  // returns the speed in ratio form (but using the encoder)
   public double getSpeed() {
     return m_master.getEncoder().getVelocity() / MotorConstants.kNeoRPM;
   }

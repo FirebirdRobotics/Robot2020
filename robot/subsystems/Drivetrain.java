@@ -46,7 +46,6 @@ public class Drivetrain extends SubsystemBase {
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-  // private ShuffleboardTab m_graphTab = Shuffleboard.getTab("Graphs");
   private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
 
   private final DifferentialDriveOdometry m_odometry;

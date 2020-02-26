@@ -17,7 +17,7 @@ import frc.robot.subsystems.ShooterSystem;
  * Runs the shooter along with the hopper, so that the hopper pushes balls into the shooter at certain intervals.
  */
 
-public class HopperShooterCommand extends ShooterCommand {
+public class HopperShooterCommand extends PID_ShooterCommand {
 
   private final HopperSystem m_hopper;
   private final Timer m_shooterTimer = new Timer();

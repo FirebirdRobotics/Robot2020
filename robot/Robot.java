@@ -8,10 +8,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.VisionConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,10 +31,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    // Creates necessary tabs once robot is created.
     m_robotContainer = new RobotContainer();
     m_robotContainer.getGyro().reset();
     m_robotContainer.getVisionSystem().setPipeline(1);
+
+    Shuffleboard.selectTab("Auto");
   }
 
   /**
@@ -75,6 +77,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.getGyro().reset();
     m_robotContainer.getVisionSystem().setPipeline(1);
 
+    Shuffleboard.selectTab("Auto");
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -100,13 +104,15 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
+    /*
     SmartDashboard.putNumber("Shooter Speed", 0);
-
     SmartDashboard.putNumber("test", 0);
     SmartDashboard.putNumber("Drive kP", 0);
     SmartDashboard.putNumber("Drive kI", 0);
     SmartDashboard.putNumber("Drive kD", 0);
+    */
+
+    Shuffleboard.selectTab("Teleop");
   }
 
   /**
@@ -116,10 +122,11 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // System.out.println("test value: " + SmartDashboard.getNumber("test", 1));
     SmartDashboard.putNumber("m_speedy", m_robotContainer.m_speedy);
-
+    /*
     VisionConstants.kpDistance = SmartDashboard.getNumber("Drive kP", 0);
     VisionConstants.kiDistance = SmartDashboard.getNumber("Drive kI", 0);
     VisionConstants.kdDistance = SmartDashboard.getNumber("Drive kD", 0);
+    */
   }
 
   @Override
@@ -129,6 +136,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.getGyro().reset();
     m_robotContainer.getVisionSystem().setPipeline(1);
 
+    Shuffleboard.selectTab("Auto");
   }
 
   /**
