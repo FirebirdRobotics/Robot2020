@@ -16,6 +16,7 @@ import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -43,9 +44,9 @@ public final class Constants {
         public static final int operatorXboxPort = 1; // unsure if this will be used as of now
 
         // DRIVETRAIN
-        public static final Button b_moreSpeedy = Button.kA;
-        public static final Button b_lessSpeedy = Button.kA;
-        public static final Button b_swappy = Button.kA;
+        public static final int b_moreSpeedy = 0; // POV Button (bearing angles)
+        public static final int b_lessSpeedy = 180; // POV Button (bearing angles)
+        public static final Button b_swappy = Button.kY;
 
         // CLIMB SYSTEM
         public static final Button b_elevatorLow = Button.kA;
@@ -61,10 +62,10 @@ public final class Constants {
         public static final Button b_hopperPiston = Button.kA;
 
         // INTAKE SYSTEM
-        public static final Button b_intake = Button.kA;
+        public static final Axis b_intake = Axis.kLeftTrigger;
 
         // SHOOTER SYSTEM
-        public static final Button b_shooter = Button.kA;
+        public static final Button b_shooter = Button.kBumperRight;
         public static final Button b_shooterPID = Button.kA;
 
         // VISIONSYSTEM
@@ -74,8 +75,8 @@ public final class Constants {
         public static final Button b_cycleLEDs = Button.kA;
 
         // ORCHESTRA
-        public static final Button b_nextSong = Button.kA;
-        public static final Button b_prevSong = Button.kA;
+        public static final Button b_nextSong = Button.kStart;
+        public static final Button b_prevSong = Button.kBack;
         public static final Button b_togglePauseMusic = Button.kA;
         public static final Button b_toggleStopMusic = Button.kA;
     }

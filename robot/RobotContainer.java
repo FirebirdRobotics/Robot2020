@@ -20,9 +20,11 @@ import frc.robot.commands.AutoShooterCommand;
 import frc.robot.commands.Autonomous;
 import frc.robot.commands.LiftElevator;
 import frc.robot.subsystems.*;
+import frc.robot.utilities.TriggerButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -134,8 +136,8 @@ public class RobotContainer {
          */
 
         // DRIVETRAIN (live controls)
-        new JoystickButton(m_driverController, OIConstants.b_moreSpeedy.value).whenPressed(() -> m_speedy += 0.05);
-        new JoystickButton(m_driverController, OIConstants.b_lessSpeedy.value).whenPressed(() -> m_speedy -= 0.05);
+        new POVButton(m_driverController, OIConstants.b_moreSpeedy).whenPressed(() -> m_speedy += 0.05);
+        new POVButton(m_driverController, OIConstants.b_lessSpeedy).whenPressed(() -> m_speedy -= 0.05);
         new JoystickButton(m_driverController, OIConstants.b_swappy.value).whenPressed(() -> {  
                 m_drivetrain.setDrivetrainInverted(!m_swappy);
                 m_swappy = !m_swappy;
@@ -156,12 +158,21 @@ public class RobotContainer {
                 .whileHeld(() -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed), m_colorSpinner);        
 
         // INTAKE SYSTEM
-        new JoystickButton(m_driverController, OIConstants.b_intake.value)
-                .whileHeld(() -> {
+        // new JoystickButton(m_driverController, OIConstants.b_intake.value)
+        //         .whileHeld(() -> {
+        //                 m_intake.setIntake(IntakeConstants.kIntakeSpeed);
+        //                 m_hopper.setHopper(HopperConstants.kHopperSpeed);
+        //         }, m_intake, m_hopper)
+        //         .whenReleased(() -> {
+        //                 m_intake.setIntake(0);
+        //                 m_hopper.setHopper(0);
+        //         });
+        new TriggerButton(m_driverController, OIConstants.b_intake.value)
+                .whileActiveContinuous(() -> {
                         m_intake.setIntake(IntakeConstants.kIntakeSpeed);
                         m_hopper.setHopper(HopperConstants.kHopperSpeed);
                 }, m_intake, m_hopper)
-                .whenReleased(() -> {
+                .whenInactive(() -> {
                         m_intake.setIntake(0);
                         m_hopper.setHopper(0);
                 });

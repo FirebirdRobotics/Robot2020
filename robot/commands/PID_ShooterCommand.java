@@ -83,6 +83,7 @@ public class PID_ShooterCommand extends PIDCommand {
         return m_shooter.getSpeed() *100 / m_velocity;
       }
     });
+    m_shooter.updateDashboard();
   }
 
   @Override
