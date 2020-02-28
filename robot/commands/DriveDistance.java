@@ -14,6 +14,11 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * Very inaccurate way to drive a certain distance. This command assumed that the motors would output perfect values without PID of any sort.
+ * @deprecated Broken
+ */
+
 public class DriveDistance extends CommandBase {
   private Timer m_timer;
   private double gearRatio = 8.4;

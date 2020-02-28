@@ -18,8 +18,25 @@ import frc.robot.subsystems.IntakeSystem;
 import frc.robot.subsystems.ShooterSystem;
 import frc.robot.subsystems.VisionSystem;
 
+/**
+ * Uses PathWeaver and other commands to cntrol the robot autonomously before each match.
+ * Drive, turn, and shoot; all the basics covered.
+ * PathWeaver stil not tested (wonder why), which might make this command unusable.
+ * If ^ this is true, then use PoorManAuto instead, which uses DriveWithEncoders.
+ */
+
 public class Autonomous extends SequentialCommandGroup {
 
+  /**
+   * 
+   * @param drive The drivetain to be us3ed for driving.
+   * @param intake The intake system to be used.
+   * @param shooter THe shooter to be used
+   * @param vision VisionSystem shich uses limelight.
+   * @param gyro Gyro
+   * @param hopper Hopper to be used for shooting and intaking balls
+   * @param path The paths that are to be used in the autonomous code.
+   */
   public Autonomous(Drivetrain drive, IntakeSystem intake, ShooterSystem shooter, VisionSystem vision, AHRS gyro, HopperSystem hopper, Trajectory... path) {
 
     // this makes it so that we can use as many trajectories as we want

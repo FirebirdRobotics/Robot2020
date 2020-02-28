@@ -18,6 +18,12 @@ import edu.wpi.first.wpilibj.Timer;
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 
+/**
+ * Uses both a PID loop and rotational physics to force the robot to drive a certain distance. 
+ * This DOES NOT use Encoders, and is therefore less accurate than DriveDistanceEncoders;
+ * however, use this in case Encoders break down.
+ */
+
 public class NiceDriveDistance extends PIDCommand {
   /**
    * Creates a new NiceDriveDistance.
@@ -32,6 +38,13 @@ public class NiceDriveDistance extends PIDCommand {
    private boolean isTrigger = true;
    private double m_time;
    private double m_velocity;
+
+   /**
+    * 
+    * @param dt The drivetrain to be used for driving.
+    * @param velocity The average velocity at which one desires to drive.
+    * @param distance The total distanc to be driven.
+    */
 
   public NiceDriveDistance(Drivetrain dt, double velocity, double distance) {
     super(

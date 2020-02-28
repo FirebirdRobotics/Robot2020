@@ -16,6 +16,12 @@ import frc.robot.subsystems.IntakeSystem;
 import frc.robot.subsystems.ShooterSystem;
 import frc.robot.subsystems.VisionSystem;
 
+/**
+ * Use this beautiful command to shocase the robots autonomous capabilities.
+ * As the title suggests, this code is janky and rough around the edges, so beware.
+ * In the future, we will be using PathWeaver, which has not been tested yet.
+ */
+
 public class PoorManAuto extends SequentialCommandGroup {
 
   public PoorManAuto(Drivetrain drive, IntakeSystem intake, ShooterSystem shooter, VisionSystem vision, AHRS gyro, HopperSystem hopper) {

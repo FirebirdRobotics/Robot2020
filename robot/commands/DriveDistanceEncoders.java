@@ -12,12 +12,23 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * Uses encoders to drive a certain distance, with less than (1/10) of an inch error.
+ * Used if PathWeaver or RunPath does not work as expected.
+ */
+
 public class DriveDistanceEncoders extends CommandBase {
 
   private final Drivetrain m_drivetrain;
   private double m_rotations;
   private double m_targetEncoderCounts;
 
+  /**
+   * 
+   * @param dt The drivetrain to be used for driving.
+   * @param targetDistance The total distance to be driven, in inches.
+   * (Driving speed located in the Constants class)
+   */
   public DriveDistanceEncoders(Drivetrain dt, double targetDistance) {
     m_drivetrain = dt;
     addRequirements(m_drivetrain);

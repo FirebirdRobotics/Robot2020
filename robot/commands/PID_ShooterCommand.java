@@ -7,11 +7,7 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.MotorConstants;
@@ -31,7 +27,6 @@ public class PID_ShooterCommand extends PIDCommand {
   private ShooterSystem m_shooter;
   private final static double EPSILON = 0.01; // all error unaccounted for
   private double m_velocity;
-  private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
 
   public PID_ShooterCommand(ShooterSystem shooter, double distance) {
@@ -56,6 +51,9 @@ public class PID_ShooterCommand extends PIDCommand {
    * Calculate intial velocity the projectile needs to have in order to reach the desired angle (get aquainted with physics).
    * We are assuming a fixed angle, which is the reason the equation only has one solution.
    * v = (distance * sqrt(g/2)) / (cos(angle) * sqrt(tan(angle)*distance + (height of shooter - height of target))) 
+   * 
+   * Assumes perfect conditions (No air resistance, perfect ball-shooter contact, etc.). Use EPSILON to fine tune this command.
+   * EEPsilong might either be a variable or a constant, depending on how this turns out.
    */
   private static double calculateRequiredVelocity(double distanceToTarget) {
     double o = ShooterConstants.kShooterAngle * UnitConversionConstants.angleConversionFactor;
@@ -68,24 +66,18 @@ public class PID_ShooterCommand extends PIDCommand {
     return velocity;
   }
 
+  /**
+   * Continously runs the output of the PID Controller, which should set the shooter to a correct speed.
+   */
   @Override
   public void execute() {
     super.execute();
-    m_teleopTab.addNumber("Current Shooter Speed", new DoubleSupplier(){
-      @Override
-      public double getAsDouble() {
-        return m_shooter.getSpeed() * MotorConstants.kNeoRPM;
-      }
-    });
-    m_teleopTab.addNumber("Shooter Spin Efficiency", new DoubleSupplier(){
-      @Override
-      public double getAsDouble() {
-        return m_shooter.getSpeed() *100 / m_velocity;
-      }
-    });
-    m_shooter.updateDashboard();
+    m_shooter.updateDashboard(m_velocity);
   }
 
+  /**
+   * Resets PID Controller, and resets output.
+   */
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);

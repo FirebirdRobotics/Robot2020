@@ -21,6 +21,9 @@ import frc.robot.Constants.UnitConversionConstants;
 import frc.robot.Constants.FieldConstants;
 
 
+/**
+ * @deprecated Preferrably, use PID_ShooterCommand instead, since this probaably not works.
+ */
 public class DeprecatedShooterCommand extends CommandBase {
 
   private DeprecatedShooterSystem m_shooter;

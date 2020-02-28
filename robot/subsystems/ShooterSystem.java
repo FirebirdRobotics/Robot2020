@@ -47,10 +47,30 @@ public class ShooterSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    m_teleopTab.addNumber("Shooter Speed", new DoubleSupplier(){
+    m_teleopTab.addNumber("Shooter Speed (ratio)", new DoubleSupplier(){
       @Override
       public double getAsDouble() {
         return getSpeed();
+      }
+    });
+    m_teleopTab.addNumber("Current Shooter RPM", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return getSpeed() * MotorConstants.kNeoRPM;
+      }
+    });
+  }
+
+  /**
+   * 
+   * @param targetSpeed The speed, in ratio form, at which to compare the current speed of the motors in this subsystem.
+   */
+  public void updateDashboard (double targetSpeed) {
+    updateDashboard();
+    m_teleopTab.addNumber("Shooter Spin Efficiency", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return getSpeed() *100 / targetSpeed;
       }
     });
   }
