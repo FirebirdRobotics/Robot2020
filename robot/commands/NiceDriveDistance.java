@@ -39,13 +39,12 @@ public class NiceDriveDistance extends PIDCommand {
    private double m_time;
    private double m_velocity;
 
-   /**
+  /**
     * 
     * @param dt The drivetrain to be used for driving.
     * @param velocity The average velocity at which one desires to drive.
-    * @param distance The total distanc to be driven.
+    * @param distance The total distance to be driven.
     */
-
   public NiceDriveDistance(Drivetrain dt, double velocity, double distance) {
     super(
         // The controller that the command will use

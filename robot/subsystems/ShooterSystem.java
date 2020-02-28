@@ -65,7 +65,7 @@ public class ShooterSystem extends SubsystemBase {
    * 
    * @param targetSpeed The speed, in ratio form, at which to compare the current speed of the motors in this subsystem.
    */
-  public void updateDashboard (double targetSpeed) {
+  public void updateDashboard(double targetSpeed) {
     updateDashboard();
     m_teleopTab.addNumber("Shooter Spin Efficiency", new DoubleSupplier(){
       @Override

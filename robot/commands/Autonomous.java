@@ -19,7 +19,7 @@ import frc.robot.subsystems.ShooterSystem;
 import frc.robot.subsystems.VisionSystem;
 
 /**
- * Uses PathWeaver and other commands to cntrol the robot autonomously before each match.
+ * Uses PathWeaver and other commands to control the robot autonomously before each match.
  * Drive, turn, and shoot; all the basics covered.
  * PathWeaver stil not tested (wonder why), which might make this command unusable.
  * If ^ this is true, then use PoorManAuto instead, which uses DriveWithEncoders.
@@ -28,23 +28,23 @@ import frc.robot.subsystems.VisionSystem;
 public class Autonomous extends SequentialCommandGroup {
 
   /**
-   * 
-   * @param drive The drivetain to be us3ed for driving.
-   * @param intake The intake system to be used.
-   * @param shooter THe shooter to be used
-   * @param vision VisionSystem shich uses limelight.
-   * @param gyro Gyro
-   * @param hopper Hopper to be used for shooting and intaking balls
-   * @param path The paths that are to be used in the autonomous code.
+   * Runs a 4-phase autonomous; at minimum needs 4 trajectories.
+   * @param drive The Drivetrain to be used.
+   * @param intake The IntakeSystem to be used.
+   * @param shooter The ShooterSystem to be used.
+   * @param vision The VisionSystem to be used.
+   * @param gyro The gyro to be used.
+   * @param hopper The HopperSystem to be used.
+   * @param path The paths that are to be used; need to input 4 paths.
    */
   public Autonomous(Drivetrain drive, IntakeSystem intake, ShooterSystem shooter, VisionSystem vision, AHRS gyro, HopperSystem hopper, Trajectory... path) {
 
     // this makes it so that we can use as many trajectories as we want
     Trajectory[] m_trajectories = path;
 
-    if (m_trajectories.length < 1) {
-      throw new IllegalArgumentException("No trajectories found. Please include trajectories when creating an Autonomous");
-    }
+    if (m_trajectories.length < 4) {
+      throw new IllegalArgumentException("Not enough trajectories found. Please include a minimum of 4 trajectories when creating an Autonomous");
+    } 
 
     addCommands(
       // 1ST PHASE OF AUTO - move to enemy trench & steal 2 balls

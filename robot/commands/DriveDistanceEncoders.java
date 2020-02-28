@@ -23,12 +23,6 @@ public class DriveDistanceEncoders extends CommandBase {
   private double m_rotations;
   private double m_targetEncoderCounts;
 
-  /**
-   * 
-   * @param dt The drivetrain to be used for driving.
-   * @param targetDistance The total distance to be driven, in inches.
-   * (Driving speed located in the Constants class)
-   */
   public DriveDistanceEncoders(Drivetrain dt, double targetDistance) {
     m_drivetrain = dt;
     addRequirements(m_drivetrain);

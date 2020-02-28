@@ -69,7 +69,7 @@ public final class Constants {
         public static final Button b_shooterPID = Button.kA;
 
         // VISIONSYSTEM
-        public static final Button b_visionRoutineTape = Button.kA;
+        public static final Button b_visionRoutineTape = Button.kB;
 
         // LEDSYSTEM
         public static final Button b_cycleLEDs = Button.kA;
@@ -354,7 +354,7 @@ public final class Constants {
          */
         public static Trajectory getTrajectory(String path) {
             try {
-                Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("/home/lvuser/deploy/" + path + ".wpilib.json");
+                Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("/home/lvuser/deploy/output/" + path + ".wpilib.json");
                 return TrajectoryUtil.fromPathweaverJson(trajectoryPath);
             } catch (IOException ex) {
                 DriverStation.reportError("Unable to open trajectory: " + path, ex.getStackTrace());

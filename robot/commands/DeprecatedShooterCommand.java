@@ -21,9 +21,6 @@ import frc.robot.Constants.UnitConversionConstants;
 import frc.robot.Constants.FieldConstants;
 
 
-/**
- * @deprecated Preferrably, use PID_ShooterCommand instead, since this probaably not works.
- */
 public class DeprecatedShooterCommand extends CommandBase {
 
   private DeprecatedShooterSystem m_shooter;
@@ -37,6 +34,7 @@ public class DeprecatedShooterCommand extends CommandBase {
    * Creates a new ShooterCommand.
    * @param shooter The desired ShooterSystem to be spun.
    * @param distance The horizontal distance to the target.
+   * @deprecated Preferably use PID_ShooterCommand instead, since this probably does not work.
    */
   public DeprecatedShooterCommand(DeprecatedShooterSystem shooter, double distance) {
     m_shooter = shooter;
