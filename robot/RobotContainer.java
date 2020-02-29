@@ -150,12 +150,11 @@ public class RobotContainer {
                 // m_hopper.setHopper(0);
                 // });
                 new TriggerButton(m_driverController, OIConstants.b_intake.value).whileActiveContinuous(() -> {
-                        m_intake.setIntake(IntakeConstants.kIntakeSpeed);
                         m_hopper.setHopper(HopperConstants.kHopperSpeed);
                 }, m_intake, m_hopper).whenInactive(() -> {
-                        m_intake.setIntake(0);
                         m_hopper.setHopper(0);
                 });
+                
 
                 // HOPPER SYSTEM; note- if the advanced commands and stuff works, there's no
                 // need to have manual hopper
