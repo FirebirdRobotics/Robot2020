@@ -53,7 +53,7 @@ public class PID_ShooterCommand extends PIDCommand {
    * v = (distance * sqrt(g/2)) / (cos(angle) * sqrt(tan(angle)*distance + (height of shooter - height of target))) 
    * 
    * Assumes perfect conditions (No air resistance, perfect ball-shooter contact, etc.). Use EPSILON to fine tune this command.
-   * EEPsilong might either be a variable or a constant, depending on how this turns out.
+   * EPSILON might either be a variable or a constant, depending on how this turns out.
    */
   private static double calculateRequiredVelocity(double distanceToTarget) {
     double o = ShooterConstants.kShooterAngle * UnitConversionConstants.angleConversionFactor;
@@ -67,7 +67,7 @@ public class PID_ShooterCommand extends PIDCommand {
   }
 
   /**
-   * Continously runs the output of the PID Controller, which should set the shooter to a correct speed.
+   * Continously runs the output of the PID Controller, which should set the shooter to a correct speed in a matter of milliseconds.
    */
   @Override
   public void execute() {
