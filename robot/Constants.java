@@ -9,10 +9,8 @@ package frc.robot;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.ColorMatch;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -58,15 +56,15 @@ public final class Constants {
         public static final Button b_colorWheel = Button.kA;
 
         // HOPPER SYSTEM
-        public static final Button b_hopper = Button.kA;
+        public static final Button b_hopper = Button.kB;
         public static final Button b_hopperPiston = Button.kA;
 
         // INTAKE SYSTEM
         public static final Axis b_intake = Axis.kLeftTrigger;
 
         // SHOOTER SYSTEM
-        public static final Button b_shooter = Button.kBumperRight;
-        public static final Button b_shooterPID = Button.kA;
+        public static final Button b_shooter = Button.kX;
+        public static final Button b_shooterPID = Button.kBumperRight;
 
         // VISIONSYSTEM
         public static final Button b_visionRoutineTape = Button.kB;
@@ -212,7 +210,7 @@ public final class Constants {
         public static final double kIntakeSpeed = 0.50;
 
         // SparkMAX CAN ports
-        public static final int intakePort = 8;
+        public static final int intakePort = 11;
 
         // Solenoid ports
         public static final int intakeSolenoidRight = 1;
@@ -222,10 +220,10 @@ public final class Constants {
     // Hopper
     public static final class HopperConstants {
         // Speed constants
-        public static final double kHopperSpeed = 0.50;
+        public static final double kHopperSpeed = 0.20;
 
         // SparkMAX CAN ports
-        public static final int hopperPort = 9;
+        public static final int hopperPort = 4;
 
         // Solenoid ports
         public static final int hopperSolenoid = 3;
@@ -237,8 +235,8 @@ public final class Constants {
         public static final double motorRPM = 5000;
         
         // SparkMAX CAN ports
-        public static final int shooterFirstPort = 10;
-        public static final int shooterSecondPort = 11;
+        public static final int shooterFirstPort = 9;
+        public static final int shooterSecondPort = 12;
 
         // PID Constants
         public static final double kP = 0;

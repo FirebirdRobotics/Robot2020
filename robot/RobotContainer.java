@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,9 +20,11 @@ import frc.robot.Constants.*;
 import frc.robot.commands.AutoShooterCommand;
 import frc.robot.commands.Autonomous;
 import frc.robot.commands.LiftElevator;
+import frc.robot.commands.PID_ShooterCommand;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.TriggerButton;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -36,14 +39,14 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class RobotContainer {
         // Define all Subsystems
         private final Drivetrain m_drivetrain = new Drivetrain();
-        private final VisionSystem m_visionSystem = new VisionSystem();
+        // private final VisionSystem m_visionSystem = new VisionSystem();
         private final ShooterSystem m_shooter = new ShooterSystem();
-        private final ClimbSystem m_climb = new ClimbSystem();
-        private final ColorWheelSystem m_colorSpinner = new ColorWheelSystem();
+        // private final ClimbSystem m_climb = new ClimbSystem();
+        // private final ColorWheelSystem m_colorSpinner = new ColorWheelSystem();
         private final HopperSystem m_hopper = new HopperSystem();
-        private final IntakeSystem m_intake = new IntakeSystem();
-        private final LEDSystem m_ledSystem = new LEDSystem();
-        private final OrchestraSystem m_orchestra = new OrchestraSystem(m_drivetrain);
+        // private final IntakeSystem m_intake = new IntakeSystem();
+        // private final LEDSystem m_ledSystem = new LEDSystem();
+        // private final OrchestraSystem m_orchestra = new OrchestraSystem(m_drivetrain);
 
         // Define all controllers
         // driver: DT & related functions
@@ -64,10 +67,18 @@ public class RobotContainer {
         };
 
         // Create Command for Autonomous
-        private final Autonomous m_allyTrench = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem,
-                        m_gyro, m_hopper, m_paths[0], m_paths[1], m_paths[2], m_paths[3]);
-        private final Autonomous m_centerArea = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem,
-                        m_gyro, m_hopper, m_paths[0], m_paths[1], m_paths[4], m_paths[5]);
+        // private final Autonomous m_allyTrench = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper, 
+        //                                                 m_paths[0], 
+        //                                                 m_paths[1], 
+        //                                                 m_paths[2], 
+        //                                                 m_paths[3]
+        //                                                 );
+        // private final Autonomous m_centerArea = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper, 
+        //                                                 m_paths[0], 
+        //                                                 m_paths[1], 
+        //                                                 m_paths[4], 
+        //                                                 m_paths[5]
+        //                                                 );
 
         // Create a sendable chooser for auto programs
         SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -95,8 +106,8 @@ public class RobotContainer {
                                 m_drivetrain));
 
                 // AUTONOMOUS
-                m_chooser.setDefaultOption("Enemy Trench", m_allyTrench);
-                m_chooser.addOption("Center Area", m_centerArea);
+                // m_chooser.setDefaultOption("Enemy Trench", m_allyTrench);
+                // m_chooser.addOption("Center Area", m_centerArea);
 
                 m_autoTab.add(m_chooser);
         }
@@ -105,9 +116,9 @@ public class RobotContainer {
                 return m_gyro;
         }
 
-        public VisionSystem getVisionSystem() {
-                return m_visionSystem;
-        }
+        // public VisionSystem getVisionSystem() {
+        //         return m_visionSystem;
+        // }
 
         private void configureButtonBindings() {
                 /*
@@ -125,19 +136,19 @@ public class RobotContainer {
                 }, m_drivetrain);
 
                 // CLIMB SYSTEM
-                new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
-                                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
-                new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
-                                .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
-                new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
-                                .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
-                new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)
-                                .whileHeld(() -> m_climb.moveSkiLift(-ClimbConstants.kSkiLiftSpeed), m_climb);
+                // new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
+                //                 .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
+                // new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
+                //                 .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
+                // new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
+                //                 .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
+                // new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)
+                //                 .whileHeld(() -> m_climb.moveSkiLift(-ClimbConstants.kSkiLiftSpeed), m_climb);
 
                 // COLORWHEEL SYSTEM
-                new JoystickButton(m_driverController, OIConstants.b_colorWheel.value).whileHeld(
-                                () -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed),
-                                m_colorSpinner);
+                // new JoystickButton(m_driverController, OIConstants.b_colorWheel.value).whileHeld(
+                //                 () -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed),
+                //                 m_colorSpinner);
 
                 // INTAKE SYSTEM
                 // new JoystickButton(m_driverController, OIConstants.b_intake.value)
@@ -149,17 +160,20 @@ public class RobotContainer {
                 // m_intake.setIntake(0);
                 // m_hopper.setHopper(0);
                 // });
-                new TriggerButton(m_driverController, OIConstants.b_intake.value).whileActiveContinuous(() -> {
-                        m_hopper.setHopper(HopperConstants.kHopperSpeed);
-                }, m_intake, m_hopper).whenInactive(() -> {
-                        m_hopper.setHopper(0);
-                });
-                
+
+                // Quite literrally only spinds the motor while it is on.
+                // new TriggerButton(m_driverController, OIConstants.b_intake.value).whileActiveContinuous(() -> {
+                //         //m_intake.setIntake(IntakeConstants.kIntakeSpeed);
+                //         m_hopper.setHopper(HopperConstants.kHopperSpeed);
+                // }, m_intake, m_hopper).whenInactive(() -> {
+                //         //m_intake.setIntake(0);
+                //         m_hopper.setHopper(0);
+                // });
 
                 // HOPPER SYSTEM; note- if the advanced commands and stuff works, there's no
                 // need to have manual hopper
-                // new JoystickButton(m_driverController, OIConstants.b_hopper.value)
-                // .whileHeld(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper);
+                new JoystickButton(m_driverController, OIConstants.b_hopper.value)
+                        .whileHeld(new InstantCommand(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper));
                 // new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
                 // .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
 
@@ -168,28 +182,30 @@ public class RobotContainer {
                 // .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM),
                 // m_shooter);
                 new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
-                                .whenPressed(new AutoShooterCommand(m_shooter, m_hopper, m_visionSystem, 5), true);
+                        .whenPressed(new PID_ShooterCommand(m_shooter, 48), true);
+                new JoystickButton(m_driverController, OIConstants.b_shooter.value)
+                        .whileHeld(new InstantCommand(()->m_shooter.manualSpinMotor(0.2), m_shooter));
 
                 // VISION SYSTEM
                 // new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
                 // .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
                 // .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
-                new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
-                                .whenPressed(() -> m_visionSystem.turnToTarget(m_drivetrain), m_drivetrain);
+                // new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
+                //                 .whenPressed(() -> m_visionSystem.turnToTarget(m_drivetrain), m_drivetrain);
 
                 // LED SYSTEM
-                new JoystickButton(m_driverController, OIConstants.b_cycleLEDs.value)
-                                .whenPressed(() -> m_ledSystem.cycleColor(), m_ledSystem);
+                // new JoystickButton(m_driverController, OIConstants.b_cycleLEDs.value)
+                //                 .whenPressed(() -> m_ledSystem.cycleColor(), m_ledSystem);
 
                 // ORCHESTRA
-                new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)
-                                .whenPressed(() -> m_orchestra.togglePauseMusic(), m_orchestra);
-                new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic.value)
-                                .whenPressed(() -> m_orchestra.toggleStopMusic(), m_orchestra);
-                new JoystickButton(m_driverController, OIConstants.b_nextSong.value)
-                                .whenPressed(() -> m_orchestra.nextSong(), m_orchestra);
-                new JoystickButton(m_driverController, OIConstants.b_prevSong.value)
-                                .whenPressed(() -> m_orchestra.previousSong(), m_orchestra);
+                // new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)
+                //                 .whenPressed(() -> m_orchestra.togglePauseMusic(), m_orchestra);
+                // new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic.value)
+                //                 .whenPressed(() -> m_orchestra.toggleStopMusic(), m_orchestra);
+                // new JoystickButton(m_driverController, OIConstants.b_nextSong.value)
+                //                 .whenPressed(() -> m_orchestra.nextSong(), m_orchestra);
+                // new JoystickButton(m_driverController, OIConstants.b_prevSong.value)
+                //                 .whenPressed(() -> m_orchestra.previousSong(), m_orchestra);
         }
 
         // Autonomous

@@ -20,6 +20,17 @@ import frc.robot.subsystems.ShooterSystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
+
+/**
+ * Ku is the P value where the motor begins oscillating.
+ * Tu is the period of oscillation for Ku.
+ * Used to determine PID constants (not tested)
+ * 
+ *          P         I           D
+ *  P   	.5*Ku	      -	          -
+    PI	  .45*Ku	.54*Ku/Tu	      -
+    PID	  .6*Ku 	1.2*Ku/Tu	  3*Ku*Tu/40
+ */
 public class PID_ShooterCommand extends PIDCommand {
   /**
    * Creates a new PID_ShooterCommand.
@@ -53,7 +64,7 @@ public class PID_ShooterCommand extends PIDCommand {
    * v = (distance * sqrt(g/2)) / (cos(angle) * sqrt(tan(angle)*distance + (height of shooter - height of target))) 
    * 
    * Assumes perfect conditions (No air resistance, perfect ball-shooter contact, etc.). Use EPSILON to fine tune this command.
-   * EPSILON might either be a variable or a constant, depending on how this turns out.
+   * EEPsilong might either be a variable or a constant, depending on how this turns out.
    */
   private static double calculateRequiredVelocity(double distanceToTarget) {
     double o = ShooterConstants.kShooterAngle * UnitConversionConstants.angleConversionFactor;
@@ -67,7 +78,7 @@ public class PID_ShooterCommand extends PIDCommand {
   }
 
   /**
-   * Continously runs the output of the PID Controller, which should set the shooter to a correct speed in a matter of milliseconds.
+   * Continously runs the output of the PID Controller, which should set the shooter to a correct speed.
    */
   @Override
   public void execute() {

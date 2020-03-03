@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     m_robotContainer.getGyro().reset();
-    m_robotContainer.getVisionSystem().setPipeline(1);
+    // m_robotContainer.getVisionSystem().setPipeline(1);
 
     Shuffleboard.selectTab("Auto");
   }
@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    m_robotContainer.getVisionSystem().setPipeline(1);
+    // m_robotContainer.getVisionSystem().setPipeline(1);
   }
 
   @Override
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.getGyro().reset();
-    m_robotContainer.getVisionSystem().setPipeline(1);
+    // m_robotContainer.getVisionSystem().setPipeline(1);
 
     Shuffleboard.selectTab("Auto");
 
@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     m_robotContainer.getGyro().reset();
-    m_robotContainer.getVisionSystem().setPipeline(1);
+    // m_robotContainer.getVisionSystem().setPipeline(1);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
@@ -134,7 +134,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.getGyro().reset();
-    m_robotContainer.getVisionSystem().setPipeline(1);
+    // m_robotContainer.getVisionSystem().setPipeline(1);
 
     Shuffleboard.selectTab("Auto");
   }
