@@ -1,0 +1,51 @@
+AUTO TAB
+---------------
+	Drivetrain
+	> Pose
+	> DT Left Position (encoder position)
+	> DT Right Position
+	> DT Left Velocity (encoder rate)
+	> DT Right Velocity 
+	> DT Left Volts
+	> DT Right Volts
+	> DT Left Setpoint
+	> DT Right Setpoint
+	
+	RobotContainer
+	> Auto chooser
+
+TELEOP TAB
+---------------
+	VisionSystem
+	> Lights
+	> Target Detected
+	> X Error
+	> Y Error
+	> Distance To Target
+
+	ShooterSystem
+	> Shooter Speed (ratio)
+	> Shooter RPM
+	> Shooter Efficiency (%)
+
+	ClimbSystem
+	> Elevator Position (encoder position)
+
+	ColorWheelSystem
+	> Color Detected
+	
+	HopperSystem
+	> Hopper (state; "OPEN"/"CLOSED")
+
+	IntakeSystem
+	> Intake Speed (ratio)
+	
+	LEDSystem
+	> LED Color
+
+	RobotContainer
+	> Color chooser
+
+	Robot
+	> m_speedy
+	> m_swappy

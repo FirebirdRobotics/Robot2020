@@ -41,7 +41,7 @@ public class HopperSystem extends SubsystemBase {
 
   /**
    * Sets state of the solenoid in the hopper.
-   * @param state True sets piston down (closed), false sets piston up (open).
+   * @param state True sets piston out (closed), false sets piston in (open).
    */
   public void setSolenoid(boolean state) {
     if (state && !m_hopperPiston.get()) {
@@ -57,13 +57,13 @@ public class HopperSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    m_teleopTab.addString("Hopper Piston", new Supplier<String>(){
+    m_teleopTab.addString("Hopper", new Supplier<String>(){
       @Override
       public String get() {
         if (m_hopperPiston.get()) {
-          return "Closed";
+          return "CLOSED";
         } else {
-          return "Open";
+          return "OPEN";
         }
       }
     });

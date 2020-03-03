@@ -9,8 +9,6 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
-//import javax.swing.text.StyleConstants.ColorConstants;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -20,7 +18,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ColorWheelConstants;
@@ -47,7 +44,7 @@ public class ColorWheelSystem extends SubsystemBase {
     m_colorMatcher.addColorMatch(ColorWheelConstants.kYellowTarget);
   }
 
-  public void spinColorWheel(double speed) {
+  public void setColorSpinner(double speed) {
     m_colorSpinner.set(speed);
   }
 
@@ -67,27 +64,36 @@ public class ColorWheelSystem extends SubsystemBase {
       colorString = "Unknown";
     }
 
-    SmartDashboard.putString("Color Detected", colorString);
+    updateDashboard();
 
     return closestMatch.color;
   }
 
-  public void spinToColor(Color desiredColor, double speed) {
+  /**
+   * Spins the color wheel to a certain color
+   * @param desiredColor The color to spin to; recommend using a sendable chooser
+   */
+  public void spinToColor(Color desiredColor) {
     if (getCurrentColor() != desiredColor) {
-      spinColorWheel(speed);
+      setColorSpinner(ColorWheelConstants.kColorSpinnerSpeed);
     } else if (getCurrentColor() == desiredColor) {
-      spinColorWheel(0.0);
+      setColorSpinner(0.0);
     }
 
   }
 
-  public void spinOneRotation() {
+  /**
+   * Use encoder counts to spin a number of rotations
+   * @param rotations Number of rotations to spin
+   */
+  public void spinRotations(int rotations) {
+    double encoderPosition = m_colorSpinner.getEncoder().getPosition();
+    if (encoderPosition < (ColorWheelConstants.kCountsPerRotation * rotations)) {
+      setColorSpinner(ColorWheelConstants.kColorSpinnerSpeed);
+    } else if (encoderPosition >= (ColorWheelConstants.kCountsPerRotation * rotations)) {
+      setColorSpinner(0.0);
+    }
     
-  }
-
-  // will send in a sendable chooser (select color from dashboard)
-  public void spinToSpecifiedColor() {
-
   }
 
   public void updateDashboard() {

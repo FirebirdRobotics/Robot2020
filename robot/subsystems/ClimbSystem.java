@@ -16,7 +16,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 
@@ -27,22 +26,22 @@ import frc.robot.Constants.ClimbConstants;
 
 public class ClimbSystem extends SubsystemBase {
   
-  private final CANSparkMax m_elevatorMotor, m_skiLift;
+  private final CANSparkMax m_elevatorMotor, m_winch;
   private final CANPIDController m_elevatorPID;
 
   private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
   public ClimbSystem() {
     m_elevatorMotor = new CANSparkMax(ClimbConstants.elevatorPort, MotorType.kBrushless);
-    m_skiLift = new CANSparkMax(ClimbConstants.skiLiftPort, MotorType.kBrushless);
+    m_winch = new CANSparkMax(ClimbConstants.skiLiftPort, MotorType.kBrushless);
 
     m_elevatorMotor.restoreFactoryDefaults();
 
     m_elevatorMotor.getEncoder().setPosition(0);
-    m_skiLift.getEncoder().setPosition(0);
+    m_winch.getEncoder().setPosition(0);
 
     m_elevatorMotor.setInverted(false);
-    m_skiLift.setInverted(false);
+    m_winch.setInverted(false);
 
     // setup elevator PID
     m_elevatorPID = m_elevatorMotor.getPIDController();
@@ -59,8 +58,6 @@ public class ClimbSystem extends SubsystemBase {
     m_elevatorPID.setSmartMotionMinOutputVelocity(ClimbConstants.kMinVel, 0);
     m_elevatorPID.setSmartMotionMaxAccel(ClimbConstants.kMaxAccel, 0);
     m_elevatorPID.setSmartMotionAllowedClosedLoopError(ClimbConstants.kAllowedError, 0);
-
-    SmartDashboard.putBoolean("Mode", true);
   }
 
   // set to encoder count, return boolean true when done
@@ -94,12 +91,12 @@ public class ClimbSystem extends SubsystemBase {
     m_elevatorMotor.set(0);
   }
 
-  public void moveSkiLift(double speed) {
-    m_skiLift.set(speed);
+  public void setWinch(double speed) {
+    m_winch.set(speed);
   }
 
   public void updateDashboard() {
-    m_teleopTab.addNumber("Elevator Encoder", new DoubleSupplier() {
+    m_teleopTab.addNumber("Elevator Position", new DoubleSupplier() {
       @Override
       public double getAsDouble() {
         return m_elevatorMotor.getEncoder().getPosition();

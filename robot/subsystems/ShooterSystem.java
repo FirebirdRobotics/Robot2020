@@ -53,7 +53,7 @@ public class ShooterSystem extends SubsystemBase {
         return getSpeed();
       }
     });
-    m_teleopTab.addNumber("Current Shooter RPM", new DoubleSupplier(){
+    m_teleopTab.addNumber("Shooter RPM", new DoubleSupplier(){
       @Override
       public double getAsDouble() {
         return getSpeed() * MotorConstants.kNeoRPM;
@@ -67,10 +67,10 @@ public class ShooterSystem extends SubsystemBase {
    */
   public void updateDashboard(double targetSpeed) {
     updateDashboard();
-    m_teleopTab.addNumber("Shooter Spin Efficiency", new DoubleSupplier(){
+    m_teleopTab.addNumber("Shooter Efficiency (%)", new DoubleSupplier(){
       @Override
       public double getAsDouble() {
-        return getSpeed() *100 / targetSpeed;
+        return (getSpeed() / targetSpeed) * 100;
       }
     });
   }
@@ -78,5 +78,6 @@ public class ShooterSystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    updateDashboard();
   }
 }

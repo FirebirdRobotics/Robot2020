@@ -49,8 +49,8 @@ public final class Constants {
         // CLIMB SYSTEM
         public static final Button b_elevatorLow = Button.kA;
         public static final Button b_elevatorHigh = Button.kA;
-        public static final Button b_skiLiftLeft = Button.kA;
-        public static final Button b_skiLiftRight = Button.kA;
+        public static final Button b_winchUp = Button.kA;
+        public static final Button b_winchDown = Button.kA;
 
         // COLORWHEEL SYSTEM
         public static final Button b_colorWheel = Button.kA;
@@ -95,7 +95,7 @@ public final class Constants {
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
-        // PID Controllers for Ramsete (we make them here b/c SmartDashboard)
+        // PID Controllers for Ramsete (we make them here so we can send them to dashboard)
         public static final PIDController leftController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
         public static final PIDController rightController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
 
@@ -160,8 +160,8 @@ public final class Constants {
     // Climbing
     public static final class ClimbConstants {
         // Speed constants
-        public static final double kSkiLiftSpeed = 0.50; // constant speed for ski lift
-        public static final double kElevatorSpeed = 0.50; // speed that elevator rises
+        public static final double kWinchSpeed = 0.20; // constant speed for ski lift
+        public static final double kElevatorSpeed = 0.20; // speed that elevator rises
 
         // SparkMAX CAN ports
         public static final int skiLiftPort = 5;
@@ -189,6 +189,9 @@ public final class Constants {
     public static final class ColorWheelConstants {
         // Speed constants
         public static final double kColorSpinnerSpeed = 0.50;
+        
+        // Encoder counts per rotation
+        public static final double kCountsPerRotation = 2000; // need to measure
 
         // SparkMAX CAN port
         public static final int colorWheelPort = 7;
@@ -201,13 +204,12 @@ public final class Constants {
         public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
         public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
         public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-        // 
     }
 
     // Intake
     public static final class IntakeConstants {
         // Speed constants
-        public static final double kIntakeSpeed = 0.50;
+        public static final double kIntakeSpeed = 0.20;
 
         // SparkMAX CAN ports
         public static final int intakePort = 11;

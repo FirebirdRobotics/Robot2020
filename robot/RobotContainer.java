@@ -11,18 +11,16 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants.*;
-import frc.robot.commands.AutoShooterCommand;
 import frc.robot.commands.Autonomous;
 import frc.robot.commands.LiftElevator;
 import frc.robot.commands.PID_ShooterCommand;
 import frc.robot.subsystems.*;
-import frc.robot.utilities.TriggerButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -39,13 +37,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class RobotContainer {
         // Define all Subsystems
         private final Drivetrain m_drivetrain = new Drivetrain();
-        // private final VisionSystem m_visionSystem = new VisionSystem();
+        private final VisionSystem m_visionSystem = new VisionSystem();
         private final ShooterSystem m_shooter = new ShooterSystem();
-        // private final ClimbSystem m_climb = new ClimbSystem();
-        // private final ColorWheelSystem m_colorSpinner = new ColorWheelSystem();
+        private final ClimbSystem m_climb = new ClimbSystem();
+        private final ColorWheelSystem m_colorSpinner = new ColorWheelSystem();
         private final HopperSystem m_hopper = new HopperSystem();
-        // private final IntakeSystem m_intake = new IntakeSystem();
-        // private final LEDSystem m_ledSystem = new LEDSystem();
+        private final IntakeSystem m_intake = new IntakeSystem();
+        private final LEDSystem m_ledSystem = new LEDSystem();
         // private final OrchestraSystem m_orchestra = new OrchestraSystem(m_drivetrain);
 
         // Define all controllers
@@ -67,24 +65,26 @@ public class RobotContainer {
         };
 
         // Create Command for Autonomous
-        // private final Autonomous m_allyTrench = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper, 
-        //                                                 m_paths[0], 
-        //                                                 m_paths[1], 
-        //                                                 m_paths[2], 
-        //                                                 m_paths[3]
-        //                                                 );
-        // private final Autonomous m_centerArea = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper, 
-        //                                                 m_paths[0], 
-        //                                                 m_paths[1], 
-        //                                                 m_paths[4], 
-        //                                                 m_paths[5]
-        //                                                 );
+        private final Autonomous m_allyTrench = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper, 
+                                                        m_paths[0], 
+                                                        m_paths[1], 
+                                                        m_paths[2], 
+                                                        m_paths[3]
+                                                        );
+        private final Autonomous m_centerArea = new Autonomous(m_drivetrain, m_intake, m_shooter, m_visionSystem, m_gyro, m_hopper, 
+                                                        m_paths[0], 
+                                                        m_paths[1], 
+                                                        m_paths[4], 
+                                                        m_paths[5]
+                                                        );
 
-        // Create a sendable chooser for auto programs
-        SendableChooser<Command> m_chooser = new SendableChooser<>();
+        // Create sendable choosers
+        SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+        SendableChooser<Color> m_colorChooser = new SendableChooser<>();
 
         // Create Shuffleboard Tabs
-        private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+        private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+        private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
 
         // Variables for customizing the robot while it is live
         public double m_speedy = 0.2; // adds/subtracts speed from robot
@@ -105,20 +105,26 @@ public class RobotContainer {
                                                 m_driverController.getBumper(Hand.kRight)),
                                 m_drivetrain));
 
-                // AUTONOMOUS
-                // m_chooser.setDefaultOption("Enemy Trench", m_allyTrench);
-                // m_chooser.addOption("Center Area", m_centerArea);
+                // AUTONOMOUS CHOOSER
+                m_autoChooser.setDefaultOption("Enemy Trench", m_allyTrench);
+                m_autoChooser.addOption("Center Area", m_centerArea);
+                m_autoTab.add(m_autoChooser);
 
-                m_autoTab.add(m_chooser);
+                // COLOR CHOOSER
+                m_colorChooser.setDefaultOption("Red", ColorWheelConstants.kRedTarget);
+                m_colorChooser.addOption("Green", ColorWheelConstants.kGreenTarget);
+                m_colorChooser.addOption("Blue", ColorWheelConstants.kBlueTarget);
+                m_colorChooser.addOption("Yellow", ColorWheelConstants.kYellowTarget);
+                m_teleopTab.add(m_colorChooser);
         }
 
         public AHRS getGyro() {
                 return m_gyro;
         }
 
-        // public VisionSystem getVisionSystem() {
-        //         return m_visionSystem;
-        // }
+        public VisionSystem getVisionSystem() {
+                return m_visionSystem;
+        }
 
         private void configureButtonBindings() {
                 /*
@@ -136,51 +142,58 @@ public class RobotContainer {
                 }, m_drivetrain);
 
                 // CLIMB SYSTEM
-                // new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
-                //                 .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
-                // new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
-                //                 .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
-                // new JoystickButton(m_driverController, OIConstants.b_skiLiftRight.value)
-                //                 .whileHeld(() -> m_climb.moveSkiLift(ClimbConstants.kSkiLiftSpeed), m_climb);
-                // new JoystickButton(m_driverController, OIConstants.b_skiLiftLeft.value)
-                //                 .whileHeld(() -> m_climb.moveSkiLift(-ClimbConstants.kSkiLiftSpeed), m_climb);
+                new JoystickButton(m_driverController, OIConstants.b_elevatorLow.value)
+                        .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorLowPosition));
+                new JoystickButton(m_driverController, OIConstants.b_elevatorHigh.value)
+                        .whenPressed(new LiftElevator(m_climb, ClimbConstants.kElevatorHighPosition));
+                new JoystickButton(m_driverController, OIConstants.b_winchUp.value)
+                        .whileHeld(() -> m_climb.setWinch(ClimbConstants.kWinchSpeed), m_climb)
+                        .whenReleased(() -> m_climb.setWinch(0), m_climb);
+                new JoystickButton(m_driverController, OIConstants.b_winchDown.value)
+                        .whileHeld(() -> m_climb.setWinch(-ClimbConstants.kWinchSpeed), m_climb)
+                        .whenReleased(() -> m_climb.setWinch(0), m_climb);
 
                 // COLORWHEEL SYSTEM
-                // new JoystickButton(m_driverController, OIConstants.b_colorWheel.value).whileHeld(
-                //                 () -> m_colorSpinner.spinColorWheel(ColorWheelConstants.kColorSpinnerSpeed),
-                //                 m_colorSpinner);
+                // new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
+                //         .whileHeld(() -> m_colorSpinner.setColorSpinner(ColorWheelConstants.kColorSpinnerSpeed), m_colorSpinner)
+                //         .whenReleased(() -> m_colorSpinner.setColorSpinner(0), m_colorSpinner);
+                new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
+                        .whileHeld(() -> m_colorSpinner.spinRotations(1), m_colorSpinner);
+                new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
+                        .whileHeld(() -> m_colorSpinner.spinToColor(m_colorChooser.getSelected()), m_colorSpinner);
 
                 // INTAKE SYSTEM
-                // new JoystickButton(m_driverController, OIConstants.b_intake.value)
-                // .whileHeld(() -> {
-                // m_intake.setIntake(IntakeConstants.kIntakeSpeed);
-                // m_hopper.setHopper(HopperConstants.kHopperSpeed);
-                // }, m_intake, m_hopper)
-                // .whenReleased(() -> {
-                // m_intake.setIntake(0);
-                // m_hopper.setHopper(0);
-                // });
+                new JoystickButton(m_driverController, OIConstants.b_intake.value)
+                        .whileHeld(() -> {
+                                m_intake.setIntake(IntakeConstants.kIntakeSpeed);
+                                m_hopper.setHopper(HopperConstants.kHopperSpeed);
+                        }, m_intake, m_hopper)
+                        .whenReleased(() -> {
+                                m_intake.setIntake(0);
+                                m_hopper.setHopper(0);
+                        }, m_intake, m_hopper);
+                // new TriggerButton(m_driverController, OIConstants.b_intake.value)
+                //         .whileActiveContinuous(() -> {
+                //                 m_intake.setIntake(IntakeConstants.kIntakeSpeed);
+                //                 m_hopper.setHopper(HopperConstants.kHopperSpeed);
+                //         }, m_intake, m_hopper)
+                //         .whenInactive(() -> {
+                //                 m_intake.setIntake(0);
+                //                 m_hopper.setHopper(0);
+                //         }, m_intake, m_hopper);
 
-                // Quite literrally only spinds the motor while it is on.
-                // new TriggerButton(m_driverController, OIConstants.b_intake.value).whileActiveContinuous(() -> {
-                //         //m_intake.setIntake(IntakeConstants.kIntakeSpeed);
-                //         m_hopper.setHopper(HopperConstants.kHopperSpeed);
-                // }, m_intake, m_hopper).whenInactive(() -> {
-                //         //m_intake.setIntake(0);
-                //         m_hopper.setHopper(0);
-                // });
-
-                // HOPPER SYSTEM; note- if the advanced commands and stuff works, there's no
-                // need to have manual hopper
+                // HOPPER SYSTEM
                 new JoystickButton(m_driverController, OIConstants.b_hopper.value)
-                        .whileHeld(new InstantCommand(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper));
-                // new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
-                // .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
+                        .whenPressed(() -> m_hopper.setSolenoid(true), m_hopper)
+                        .whileHeld(() -> m_hopper.setHopper(HopperConstants.kHopperSpeed), m_hopper)
+                        .whenReleased(() -> {
+                                m_hopper.setHopper(0);
+                                m_hopper.setSolenoid(false);
+                        }, m_hopper);
+                new JoystickButton(m_driverController, OIConstants.b_hopperPiston.value)
+                        .whileHeld(() -> m_hopper.toggleSolenoid(), m_hopper);
 
                 // SHOOTER SYSTEM
-                // new JoystickButton(m_driverController, OIConstants.b_shooter.value)
-                // .whileHeld(() -> m_shooter.spinShooter(ShooterConstants.motorRPM),
-                // m_shooter);
                 new JoystickButton(m_driverController, OIConstants.b_shooterPID.value)
                         .whenPressed(new PID_ShooterCommand(m_shooter, 48), true);
                 new JoystickButton(m_driverController, OIConstants.b_shooter.value)
@@ -188,29 +201,29 @@ public class RobotContainer {
 
                 // VISION SYSTEM
                 // new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
-                // .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
-                // .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
-                // new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
-                //                 .whenPressed(() -> m_visionSystem.turnToTarget(m_drivetrain), m_drivetrain);
+                //         .whenPressed(() -> m_visionSystem.visionRoutineTape(m_drivetrain))
+                //         .whenReleased(() -> m_visionSystem.visionRoutineReleased(m_drivetrain));
+                new JoystickButton(m_driverController, OIConstants.b_visionRoutineTape.value)
+                        .whenPressed(() -> m_visionSystem.turnToTarget(m_drivetrain), m_drivetrain);
 
                 // LED SYSTEM
-                // new JoystickButton(m_driverController, OIConstants.b_cycleLEDs.value)
-                //                 .whenPressed(() -> m_ledSystem.cycleColor(), m_ledSystem);
+                new JoystickButton(m_driverController, OIConstants.b_cycleLEDs.value)
+                        .whenPressed(() -> m_ledSystem.cycleColor(), m_ledSystem);
 
                 // ORCHESTRA
                 // new JoystickButton(m_driverController, OIConstants.b_togglePauseMusic.value)
-                //                 .whenPressed(() -> m_orchestra.togglePauseMusic(), m_orchestra);
+                //         .whenPressed(() -> m_orchestra.togglePauseMusic(), m_orchestra);
                 // new JoystickButton(m_driverController, OIConstants.b_toggleStopMusic.value)
-                //                 .whenPressed(() -> m_orchestra.toggleStopMusic(), m_orchestra);
+                //         .whenPressed(() -> m_orchestra.toggleStopMusic(), m_orchestra);
                 // new JoystickButton(m_driverController, OIConstants.b_nextSong.value)
-                //                 .whenPressed(() -> m_orchestra.nextSong(), m_orchestra);
+                //         .whenPressed(() -> m_orchestra.nextSong(), m_orchestra);
                 // new JoystickButton(m_driverController, OIConstants.b_prevSong.value)
-                //                 .whenPressed(() -> m_orchestra.previousSong(), m_orchestra);
+                //         .whenPressed(() -> m_orchestra.previousSong(), m_orchestra);
         }
 
         // Autonomous
         public Command getAutonomousCommand() {
                 // Chosen command will run
-                return m_chooser.getSelected();
+                return m_autoChooser.getSelected();
         }
 }

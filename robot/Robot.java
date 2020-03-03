@@ -7,9 +7,11 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -34,7 +36,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     m_robotContainer.getGyro().reset();
-    // m_robotContainer.getVisionSystem().setPipeline(1);
+    m_robotContainer.getVisionSystem().setPipeline(1);
 
     Shuffleboard.selectTab("Auto");
   }
@@ -60,7 +62,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    // m_robotContainer.getVisionSystem().setPipeline(1);
+    m_robotContainer.getVisionSystem().setPipeline(1);
   }
 
   @Override
@@ -75,7 +77,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.getGyro().reset();
-    // m_robotContainer.getVisionSystem().setPipeline(1);
+    m_robotContainer.getVisionSystem().setPipeline(1);
 
     Shuffleboard.selectTab("Auto");
 
@@ -99,7 +101,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     m_robotContainer.getGyro().reset();
-    // m_robotContainer.getVisionSystem().setPipeline(1);
+    m_robotContainer.getVisionSystem().setPipeline(1);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
@@ -120,8 +122,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // System.out.println("test value: " + SmartDashboard.getNumber("test", 1));
-    SmartDashboard.putNumber("m_speedy", m_robotContainer.m_speedy);
+    Shuffleboard.getTab("Teleop").addNumber("m_speedy", new DoubleSupplier(){
+      @Override
+      public double getAsDouble() {
+        return m_robotContainer.m_speedy;
+      }
+    });
+    Shuffleboard.getTab("Teleop").addString("m_swappy", new Supplier<String>(){
+      @Override
+      public String get() {
+        if (m_robotContainer.m_swappy == true) {
+          return "Inverted";
+        } else {
+          return "Normal";
+        }
+      }
+    });
     /*
     VisionConstants.kpDistance = SmartDashboard.getNumber("Drive kP", 0);
     VisionConstants.kiDistance = SmartDashboard.getNumber("Drive kI", 0);
@@ -134,7 +150,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.getGyro().reset();
-    // m_robotContainer.getVisionSystem().setPipeline(1);
+    m_robotContainer.getVisionSystem().setPipeline(1);
 
     Shuffleboard.selectTab("Auto");
   }

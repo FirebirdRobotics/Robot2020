@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriveConstants;
@@ -101,21 +100,11 @@ public class Drivetrain extends SubsystemBase {
   // ARCADE DRIVE = 1 STICK
   public void arcadeDrive(final double forward, final double turn) {
     m_diffDrive.arcadeDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, true);
-    
-    updateDashboard(m_leftMaster, "Left Master");
-    updateDashboard(m_rightMaster, "Right Master");
-    updateDashboard(m_leftSlave, "Left Slave");
-    updateDashboard(m_rightSlave, "Right Slave");
   }
 
   // CURVATURE DRIVE = 2 STICK + QUICK TURN BUTTON
-  public void curvatureDrive(final double forward, final double turn, final boolean isQuickTurn) {
-    m_diffDrive.curvatureDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, isQuickTurn);
-
-    updateDashboard(m_leftMaster, "Left Master");
-    updateDashboard(m_rightMaster, "Right Master");
-    updateDashboard(m_leftSlave, "Left Slave");
-    updateDashboard(m_rightSlave, "Right Slave");
+  public void curvatureDrive(final double forward, final double turn, final boolean quickTurn) {
+    m_diffDrive.curvatureDrive(forward * DriveConstants.kDriveSpeed, turn * DriveConstants.kTurnSpeed, quickTurn);
   }
 
   // AUTO DRIVE = for autonomous commands
@@ -349,59 +338,54 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
-  public void updateDashboard(final WPI_TalonFX talon, final String talonName) {
-    SmartDashboard.putNumber("Output % (" + talonName + ")", talon.getMotorOutputPercent());
-    SmartDashboard.putNumber("Sensor Pos. (" + talonName + ")", talon.getSelectedSensorPosition());
-  }
-
   // Returns in a ratio unit depending on the motor's max RPM.
   public double getVelocity () {
     return ((m_rightMaster.getSelectedSensorVelocity() + m_leftMaster.getSelectedSensorVelocity()) * 5 / (MotorConstants.kFalconCPR * MotorConstants.kFalconRPM));
   }
 
-  public double getRightEncoderPosition2 () {
+  public double getRightEncoderPosition2() {
     return m_rightMaster.getSelectedSensorPosition();
   }
 
   public void updateDashboard() {
     m_autoTab.add("Pose", m_odometry.getPoseMeters().toString());
 
-		m_autoTab.addNumber("Left Position", new DoubleSupplier() {
+		m_autoTab.addNumber("DT Left Position", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return getLeftEncoderPosition();
 			}
     });
     
-    m_autoTab.addNumber("Right Position", new DoubleSupplier(){
+    m_autoTab.addNumber("DT Right Position", new DoubleSupplier(){
 			@Override
 			public double getAsDouble() {
 				return getRightEncoderPosition();
 			}
 		});
 
-		m_autoTab.addNumber("Left Velocity", new DoubleSupplier() {
+		m_autoTab.addNumber("DT Left Velocity", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return getLeftEncoderRate();
 			}
     });
     
-    m_autoTab.addNumber("Right Velocity", new DoubleSupplier() {
+    m_autoTab.addNumber("DT Right Velocity", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return getRightEncoderRate();
 			}
 		});
 
-		m_autoTab.addNumber("Left Volts", new DoubleSupplier() {
+		m_autoTab.addNumber("DT Left Volts", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return m_leftMaster.getMotorOutputVoltage();
 			}
 		}).withWidget("Graph");
 
-		m_autoTab.addNumber("Right Volts", new DoubleSupplier() {
+		m_autoTab.addNumber("DT Right Volts", new DoubleSupplier() {
 			@Override
 			public double getAsDouble() {
 				return m_rightMaster.getMotorOutputVoltage();

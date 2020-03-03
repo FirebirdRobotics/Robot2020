@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -277,34 +278,41 @@ public class VisionSystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
+    m_teleopTab.addString("Lights", new Supplier<String>(){
+      @Override
+      public String get() {
+        if (m_limelight.getEntry("pipeline").getNumber(1).intValue() == 1) {
+          return "OFF";
+        } else if (m_limelight.getEntry("pipeline").getNumber(1).intValue() == 0) {
+          return "ON";
+        } else {
+          return "OFF";
+        }
+      }
+    });
+
     m_teleopTab.addNumber("Target Detected", new DoubleSupplier(){
       @Override
       public double getAsDouble() {
         return tv;
       }
     });
-    m_teleopTab.addNumber("Horizontal Error", new DoubleSupplier(){
+    m_teleopTab.addNumber("X Error", new DoubleSupplier(){
       @Override
       public double getAsDouble() {
         return tx;
       }
     });
-    m_teleopTab.addNumber("Vertical Error", new DoubleSupplier(){
+    m_teleopTab.addNumber("Y Error", new DoubleSupplier(){
       @Override
       public double getAsDouble() {
         return ty;
       }
     });
-    m_teleopTab.addNumber("Target Area", new DoubleSupplier(){
+    m_teleopTab.addNumber("Distance To Target", new DoubleSupplier(){
       @Override
       public double getAsDouble() {
-        return ta;
-      }
-    });
-    m_teleopTab.addNumber("Closest Target (Distance)", new DoubleSupplier(){
-      @Override
-      public double getAsDouble() {
-        return VisionConstants.closestTargetDistance;
+        return rawDistanceToTarget();
       }
     });
   }
