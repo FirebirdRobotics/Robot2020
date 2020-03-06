@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ColorWheelConstants;
 import frc.robot.subsystems.ColorWheelSystem;
 
+/**
+ * Turns the wheel motor a certain number of rotations, as passed in the constructor.
+ * DO NOT use if encoder counts per rotation has been instatiated. Otherwise undefined behavior might occur.
+ */
+
 public class SpinRotations extends CommandBase {
   
   private ColorWheelSystem m_color;
