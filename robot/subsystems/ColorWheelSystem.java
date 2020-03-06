@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -86,7 +87,8 @@ public class ColorWheelSystem extends SubsystemBase {
    * Use encoder counts to spin a number of rotations
    * @param rotations Number of rotations to spin
    */
-  public void spinRotations(int rotations) {
+  public void spinRotations(int rotations, double target) {
+    // m_colorSpinner.getEncoder().setPosition(0);
     double encoderPosition = m_colorSpinner.getEncoder().getPosition();
     if (encoderPosition < (ColorWheelConstants.kCountsPerRotation * rotations)) {
       setColorSpinner(ColorWheelConstants.kColorSpinnerSpeed);
@@ -94,6 +96,10 @@ public class ColorWheelSystem extends SubsystemBase {
       setColorSpinner(0.0);
     }
     
+  }
+
+  public CANEncoder getEncoder() {
+    return m_colorSpinner.getEncoder();
   }
 
   public void updateDashboard() {

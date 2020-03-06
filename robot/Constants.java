@@ -191,7 +191,7 @@ public final class Constants {
         public static final double kColorSpinnerSpeed = 0.50;
         
         // Encoder counts per rotation
-        public static final double kCountsPerRotation = 2000; // need to measure
+        public static final double kCountsPerRotation = 0; // need to measure
 
         // SparkMAX CAN port
         public static final int colorWheelPort = 7;

@@ -22,6 +22,7 @@ import frc.robot.Constants.*;
 import frc.robot.commands.Autonomous;
 import frc.robot.commands.LiftElevator;
 import frc.robot.commands.PID_ShooterCommand;
+import frc.robot.commands.SpinRotations;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -171,7 +172,7 @@ public class RobotContainer {
                 //         .whileHeld(() -> m_colorSpinner.setColorSpinner(ColorWheelConstants.kColorSpinnerSpeed), m_colorSpinner)
                 //         .whenReleased(() -> m_colorSpinner.setColorSpinner(0), m_colorSpinner);
                 new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
-                        .whileHeld(() -> m_colorSpinner.spinRotations(1), m_colorSpinner);
+                        .whenPressed(new SpinRotations(m_colorSpinner, 3));
                 new JoystickButton(m_driverController, OIConstants.b_colorWheel.value)
                         .whileHeld(() -> m_colorSpinner.spinToColor(m_colorChooser.getSelected()), m_colorSpinner);
 
