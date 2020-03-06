@@ -8,6 +8,8 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -44,7 +46,7 @@ public class RobotContainer {
         private final HopperSystem m_hopper = new HopperSystem();
         private final IntakeSystem m_intake = new IntakeSystem();
         private final LEDSystem m_ledSystem = new LEDSystem();
-        // private final OrchestraSystem m_orchestra = new OrchestraSystem(m_drivetrain);
+        // private final OrchestraSystem m_orchestra = new OrchestraSystem(m_drivetrain); // MEMES
 
         // Define all controllers
         // driver: DT & related functions
@@ -56,12 +58,13 @@ public class RobotContainer {
         private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
         // Array of Autonomous Paths (from PathWeaver)
-        private Trajectory[] m_paths = new Trajectory[] { PathWeaver.getTrajectory("ENEMY_TRENCH_MOVE"), // index 0
-                        PathWeaver.getTrajectory("ENEMY_TRENCH_SHOOT"), // index 1
-                        PathWeaver.getTrajectory("ALLY_TRENCH_MOVE"), // index 2
-                        PathWeaver.getTrajectory("ALLY_TRENCH_SHOOT"), // index 3
-                        PathWeaver.getTrajectory("CENTER_AREA_MOVE"), // index 4
-                        PathWeaver.getTrajectory("CENTER_AREA_SHOOT") // index 5
+        private Trajectory[] m_paths = new Trajectory[] { 
+                PathWeaver.getTrajectory("ENEMY_TRENCH_MOVE"), // index 0
+                PathWeaver.getTrajectory("ENEMY_TRENCH_SHOOT"), // index 1
+                PathWeaver.getTrajectory("ALLY_TRENCH_MOVE"), // index 2
+                PathWeaver.getTrajectory("ALLY_TRENCH_SHOOT"), // index 3
+                PathWeaver.getTrajectory("CENTER_AREA_MOVE"), // index 4
+                PathWeaver.getTrajectory("CENTER_AREA_SHOOT") // index 5
         };
 
         // Create Command for Autonomous
@@ -85,6 +88,9 @@ public class RobotContainer {
         // Create Shuffleboard Tabs
         private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
         private final ShuffleboardTab m_teleopTab = Shuffleboard.getTab("Teleop");
+
+        // Compressor
+        private Compressor m_compressor = new Compressor(0);
 
         // Variables for customizing the robot while it is live
         public double m_speedy = 0.2; // adds/subtracts speed from robot
@@ -116,6 +122,9 @@ public class RobotContainer {
                 m_colorChooser.addOption("Blue", ColorWheelConstants.kBlueTarget);
                 m_colorChooser.addOption("Yellow", ColorWheelConstants.kYellowTarget);
                 m_teleopTab.add(m_colorChooser);
+                
+                // COMPRESSOR: true turns on compressor (auto stop @ 120psi) & false turns off compressor
+                m_compressor.setClosedLoopControl(true); // not recommended to mess with this
         }
 
         public AHRS getGyro() {
@@ -124,6 +133,10 @@ public class RobotContainer {
 
         public VisionSystem getVisionSystem() {
                 return m_visionSystem;
+        }
+
+        public Compressor getCompressor() {
+                return m_compressor;
         }
 
         private void configureButtonBindings() {

@@ -138,6 +138,16 @@ public class Robot extends TimedRobot {
         }
       }
     });
+    Shuffleboard.getTab("Teleop").addString("Compressor", new Supplier<String>(){
+      @Override
+      public String get() {
+        if (m_robotContainer.getCompressor().enabled() == true) {
+          return "ON";
+        } else {
+          return "OFF";
+        }
+      }
+    });
     /*
     VisionConstants.kpDistance = SmartDashboard.getNumber("Drive kP", 0);
     VisionConstants.kiDistance = SmartDashboard.getNumber("Drive kI", 0);
