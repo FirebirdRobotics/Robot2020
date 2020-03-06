@@ -11,6 +11,11 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * Turn exactly as maany angles as are inputted into the command, assuming current direction vector is located at 0 degrees.
+ * Should be able to work.
+ */
+
 public class TurnAngle extends CommandBase {
 
   private final Drivetrain m_drive;
