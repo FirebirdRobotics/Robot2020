@@ -17,10 +17,6 @@ import frc.robot.Constants.UnitConversionConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.ShooterSystem;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-
 /**
  * Ku is the P value where the motor begins oscillating.
  * Tu is the period of oscillation for Ku.
