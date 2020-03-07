@@ -12,6 +12,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * Once the bot turns on, a polar coordinate system will be esbalished on the field where "0 degrees" is the direction the 
+ * bot was pointing towards when turned on. This method uses this polar coordinate system to turn to a certain direction, given
+ * as an angle. 
+ * For example, imagine the bot turns on and you run turnToAngle(180). The bot will do a 180 turn. HOwever, if you again call
+ * turnToAngle(180), the bot will not move since it is already pointing in the 180 degrees direction.
+ */
+
 public class TurnToAngle extends CommandBase {
 
   private final Drivetrain m_drive;
