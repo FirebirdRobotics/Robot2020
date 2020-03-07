@@ -12,6 +12,11 @@ import frc.robot.subsystems.ShooterSystem;
 import frc.robot.subsystems.VisionSystem;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * Extends HopperShooterCommand and takes in vision system in order to calculate the distance to the target.
+ * Since it is an extension of ^ , it also spins the hopper as necessary.
+ */
+
 public class AutoShooterCommand extends HopperShooterCommand {
 
   private VisionSystem m_vision;
